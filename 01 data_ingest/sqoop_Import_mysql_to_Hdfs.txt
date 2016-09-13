@@ -1,0 +1,59 @@
+Command to import mysql (categories Table) data into HDFS location /user/cloudera/cca175/mysql
+
+--Import specific columns from retail_db.categories table into HDFS
+sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
+--table categories \
+--username root  \
+--password cloudera  \
+--target-dir /user/cloudera/cca175/mysql/categories_all_columns -m 1
+=============================================================================================================================================================================================
+--Import specific columns from retail_db.customers table into HDFS
+sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
+--table customers \
+--username root \
+--password cloudera \
+--target-dir /user/cloudera/cca175/mysql/customers_all_columns -m 1
+=============================================================================================================================================================================================
+--Import specific columns from retail_db.customers table into HDFS by using --direct and --delete-target-dir
+sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
+--table customers \
+--username root \
+-P \
+--delete-target-dir /user/cloudera/cca175/mysql/customers_all_columns -m 4 \
+--direct
+=============================================================================================================================================================================================
+--Import specific columns from retail_db.order_items table into HDFS
+sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
+--table order_items \
+--username root \
+--password cloudera \
+--target-dir /user/cloudera/cca175/mysql/order_items_all_columns -m 1
+=============================================================================================================================================================================================
+--Import specific columns from retail_db.order_items table into HDFS by using --direct and --delete-target-dir
+sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
+--table order_items \
+--username root \
+-P \
+--target-dir /user/cloudera/cca175/mysql/order_items_all_columns -m 1
+=============================================================================================================================================================================================
+--Import specific columns from retail_db.orders table into HDFS 
+sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
+--table orders \
+--username root \
+-P \
+--target-dir /user/cloudera/cca175/mysql/orders_all_columns -m 1
+=============================================================================================================================================================================================
+--Import specific columns from retail_db.products table into HDFS 
+sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
+--table products \
+--username root \
+-P \
+--target-dir /user/cloudera/cca175/mysql/products_all_columns -m 1
+=============================================================================================================================================================================================
+
+=============================================================================================================================================================================================
+
+=============================================================================================================================================================================================
+
+
+
