@@ -1,0 +1,30 @@
+--export
+sqoop export --connect jdbc:mysql://localhost:3306/sample_db \
+--table employee \
+--username root \
+-P \
+--export-dir /user/cloudera/cca175/hdfs/employee.txt -m 1
+
+after exporting the data into mysql DB please check the data in sample_db 
+
+mysql> select count(*) from employee;
++----------+
+| count(*) |
++----------+
+|        6 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee;
++------+----------+------+
+| eid  | ename    | eage |
++------+----------+------+
+|  100 | Albert   |   20 |
+|  101 | Benjamin |   21 |
+|  102 | Chaplin  |   22 |
+|  103 | David    |   23 |
+|  104 | Elvikis  |   23 |
+|  105 | Frank    |   23 |
++------+----------+------+
+6 rows in set (0.00 sec)
+

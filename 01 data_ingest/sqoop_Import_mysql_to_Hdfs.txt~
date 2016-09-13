@@ -34,7 +34,9 @@ sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
 --table order_items \
 --username root \
 -P \
---target-dir /user/cloudera/cca175/mysql/orderitemsallcolumns -m 1
+--direct \
+--target-dir /user/cloudera/cca175/mysql/order_items_all_columns
+
 =============================================================================================================================================================================================
 --Import specific columns from retail_db.orders table into HDFS 
 sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
@@ -50,9 +52,23 @@ sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
 -P \
 --target-dir /user/cloudera/cca175/mysql/products_all_columns -m 1
 =============================================================================================================================================================================================
-
+sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
+--table departments \
+--username root \
+-P \
+--target-dir /user/cloudera/cca175/mysql/departments_all_columns \
+--direct
 =============================================================================================================================================================================================
+--Import-all-tables
+sqoop import-all-tables \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+-m 1
 
+***Note: Import-all-tables does not take the argument "target-dir" 
+***Note: Primary key should be defined in mysql tables or should pass -m 1
+***Note: Output directory would be /user/cloudera/tableName/
 =============================================================================================================================================================================================
 
 

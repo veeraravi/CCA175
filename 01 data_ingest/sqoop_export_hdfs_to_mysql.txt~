@@ -1,0 +1,7 @@
+--export
+sqoop export --connect jdbc:mysql://localhost:3306/sample_db \
+--table employee \
+--username root \
+-P \
+--export-dir /user/cloudera/cca175/hdfs/employee.txt -m 1
+
