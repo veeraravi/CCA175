@@ -1,0 +1,38 @@
+--Create Table with an existing HDFS File 
+create table sample(
+col1 STRING,
+col2 STRING,
+col3 STRING
+)
+ROW FORMAT delimited
+FIELDS terminated BY ','
+stored as textfile
+LOCATION '/user/gokul/data';
+
+--Get all the records from sample table
+select * from sample;
+
+--create a copy of sample table by using sample table (Note: Only the DDL and the data would not be copied)
+create table sample_backup like sample;
+
+--Get all the records from sample_backup table
+select * from sample_backup;
+
+--Create a copy of sample table by using sample table with the existing data;
+create table sample_backup_with_data As Select * from sample;
+
+--Create a copy of sample table by using sample table with the existing data in a PARQUET format
+
+drop table if exists sample_bkp_data_new_delim;
+create table if not exists sample_bkp_data_new_delim 
+row format delimited
+fields terminated by '|'
+stored as parquet
+AS Select * from sample
+;
+--Create a copy of sample table by using sample table with the existing data in a AVRO format
+create table if not exists sample_as_avro 
+row format delimited
+fields terminated by '|'
+stored as avro
+as select * from sample;
