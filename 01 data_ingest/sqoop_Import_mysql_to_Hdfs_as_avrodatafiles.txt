@@ -1,0 +1,34 @@
+sqoop import-all-tables \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--direct \
+--warehouse-dir /user/cloudera/cca175/retail_db 
+
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table products \
+--target-dir /user/cloudera/cca175/retail_db_avro_format/products \
+--delete-target-dir \
+--as-avrodatafile \
+-m 5
+
+sqoop import-all-tables \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--as-avrodatafile \
+--direct \
+--warehouse-dir /user/cloudera/cca175/retail_db_avro_format
+
+-rw-rw-r--  1 cloudera cloudera   922 Dec 31 06:18 sqoop_import_products.avsc
+-rw-rw-r--  1 cloudera cloudera   541 Dec 31 09:45 sqoop_import_categories.avsc
+-rw-rw-r--  1 cloudera cloudera  1324 Dec 31 09:46 sqoop_import_customers.avsc
+-rw-rw-r--  1 cloudera cloudera   409 Dec 31 09:47 sqoop_import_departments.avsc
+-rw-rw-r--  1 cloudera cloudera   980 Dec 31 09:48 sqoop_import_order_items.avsc
+-rw-rw-r--  1 cloudera cloudera   632 Dec 31 09:49 sqoop_import_orders.avsc
+
+[cloudera@quickstart ~]$ hadoop fs -mkdir /user/cloudera/cca175/retail_db_avro_schemas
+[cloudera@quickstart ~]$ hadoop fs -put *.avsc /user/cloudera/cca175/retail_db_avro_schemas/

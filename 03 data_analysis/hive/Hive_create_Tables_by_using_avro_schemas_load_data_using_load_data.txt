@@ -1,0 +1,62 @@
+CREATE DATABASE retaildb_as_avro;
+USE retaildb_as_avro;
+
+CREATE TABLE products
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION '/user/cloudera/cca175/mysql/products_in_avro/datafile'
+TBLPROPERTIES ('avro.schema.url'='/user/cloudera/cca175/mysql/products_in_avro/schemafile/sqoop_import_products.avsc');
+
+CREATE EXTERNAL TABLE products_external
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION '/user/cloudera/cca175/mysql/products_in_avro/datafile'
+TBLPROPERTIES ('avro.schema.url'='/user/cloudera/cca175/mysql/products_in_avro/schemafile/sqoop_import_products.avsc');
+
+
+CREATE TABLE products_bkp
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION '/user/cloudera/cca175/mysql/products_in_avro/datafile'
+TBLPROPERTIES ('avro.schema.literal'='{
+  "type" : "record",
+  "name" : "sqoop_import_products",
+  "doc" : "Sqoop import of products",
+  "fields" : [ {
+    "name" : "product_id",
+    "type" : [ "int", "null" ],
+    "columnName" : "product_id",
+    "sqlType" : "4"
+  }, {
+    "name" : "product_category_id",
+    "type" : [ "int", "null" ],
+    "columnName" : "product_category_id",
+    "sqlType" : "4"
+  }, {
+    "name" : "product_name",
+    "type" : [ "string", "null" ],
+    "columnName" : "product_name",
+    "sqlType" : "12"
+  }, {
+    "name" : "product_description",
+    "type" : [ "string", "null" ],
+    "columnName" : "product_description",
+    "sqlType" : "12"
+  }, {
+    "name" : "product_price",
+    "type" : [ "float", "null" ],
+    "columnName" : "product_price",
+    "sqlType" : "7"
+  }, {
+    "name" : "product_image",
+    "type" : [ "string", "null" ],
+    "columnName" : "product_image",
+    "sqlType" : "12"
+  } ],
+  "tableName" : "products"
+}');
+
+select * from products_bkp where product_name like 'Under%';
