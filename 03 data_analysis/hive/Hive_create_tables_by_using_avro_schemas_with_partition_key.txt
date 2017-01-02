@@ -1,0 +1,20 @@
+CREATE TABLE orders_part
+(order_id INT,
+ order_date STRING,
+ order_customer_id INT,
+ order_status STRING
+  )
+PARTITIONED BY (orders_date STRING)
+STORED AS AVRO
+LOCATION '/user/hive/warehouse/retaildb_as_avro/orders_part'
+TBLPROPERTIES ('avro.schema.url' = '/user/cloudera/cca175/retail_db_avro_schemas/sqoop_import_orders_part.avsc');
+
+
+INSERT INTO orders_part partition(orders_date)
+SELECT order_id, order_date, order_customer_id, order_status, 
+substr(from_unixtime(cast(substr(order_date,1,10) as Int)), 1, 7) as orders_date from orders;
+
+set hive.exec.dynamic.partition.mode=nonstrict;
+
+
+select orders_date, count(1) from orders_part group by orders_date;

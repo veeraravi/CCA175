@@ -1,0 +1,27 @@
+#Components
+
+NC.sources  = s1
+NC.channels = c1
+NC.sinks = k1
+
+# Source Components
+
+NC.sources.s1.type = netcat
+NC.sources.s1.bind = localhost
+NC.sources.s1.port = 55555
+
+#Sink Component
+
+NC.sinks.k1.type = hdfs
+NC.sinks.k1.hdfs.path = /user/cloudera/cca175/flume/NetcatToHdfsAsSeqFile
+
+#Channel Component
+
+NC.channels.c1.type = memory
+NC.channels.c1.capacity = 1000
+NC.channels.c1.transactionCapacity = 100
+
+#Linkage
+
+NC.sources.s1.channels = c1
+NC.sinks.k1.channel = c1

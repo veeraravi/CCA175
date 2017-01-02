@@ -1,0 +1,23 @@
+#All the components
+
+seqGen.sources = s1
+seqGen.channels = c1
+seqGen.sinks = k1
+
+#Source Component
+seqGen.sources.s1.type = seq
+
+#Sink Component
+seqGen.sinks.k1.type = hdfs
+seqGen.sinks.k1.hdfs.path = /user/cloudera/cca175/flume/SeqGenToHdfs
+seqGen.sinks.k1.hdfs.rollCount = 125
+seqGen.sinks.k1.hdfs.fileType = DataStream
+
+#Channel Component
+seqGen.channels.c1.type = memory
+seqGen.channels.c1.capacity = 1000
+seqGen.channels.c1.transactionCapacity = 100
+
+#Linkage
+seqGen.sources.s1.channels = c1
+seqGen.sinks.k1.channel = c1

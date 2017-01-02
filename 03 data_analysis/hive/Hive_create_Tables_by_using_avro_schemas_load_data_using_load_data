@@ -1,0 +1,86 @@
+categories          |
+| customers           |
+| departments         |
+| order_items         |
+| orders              |
+| products  
+
+CREATE DATABASE retaildb_as_avro;
+
+USE retaildb_as_avro;
+
+-- PRODUCTS Table
+DROP TABLE products;
+CREATE TABLE products
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+TBLPROPERTIES ('avro.schema.url'='/user/cloudera/cca175/retail_db_avro_schemas/sqoop_import_products.avsc');
+
+LOAD DATA INPATH '/user/cloudera/cca175/retail_db_avro_format/products' OVERWRITE INTO TABLE products;
+
+SELECT COUNT(*) FROM products;
+SELECT * FROM products;
+
+--CATEGORIES
+CREATE TABLE categories
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+TBLPROPERTIES ('avro.schema.url' = '/user/cloudera/cca175/retail_db_avro_schemas/sqoop_import_categories.avsc');
+
+LOAD DATA INPATH '/user/cloudera/cca175/retail_db_avro_format/categories' OVERWRITE INTO TABLE categories;
+
+SELECT COUNT(*) FROM categories;
+SELECT * FROM categories;
+
+--CUSTOMERS
+CREATE TABLE customers
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+TBLPROPERTIES ('avro.schema.url' = '/user/cloudera/cca175/retail_db_avro_schemas/sqoop_import_customers.avsc');
+
+LOAD DATA INPATH '/user/cloudera/cca175/retail_db_avro_format/customers' OVERWRITE INTO TABLE customers;
+
+SELECT COUNT(*) FROM customers;
+SELECT * FROM customers;
+
+--DEPARTMENTS
+
+CREATE TABLE departments
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+TBLPROPERTIES ('avro.schema.url' = '/user/cloudera/cca175/retail_db_avro_schemas/sqoop_import_departments.avsc');
+
+LOAD DATA INPATH '/user/cloudera/cca175/retail_db_avro_format/departments' OVERWRITE INTO TABLE departments;
+
+SELECT COUNT(*) FROM departments;
+SELECT * FROM departments;
+
+--ORDR_ITEMS
+
+CREATE TABLE order_items
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+TBLPROPERTIES ('avro.schema.url' = '/user/cloudera/cca175/retail_db_avro_schemas/sqoop_import_order_items.avsc');
+
+LOAD DATA INPATH '/user/cloudera/cca175/retail_db_avro_format/order_items' OVERWRITE INTO TABLE order_items;
+
+SELECT COUNT(*) FROM order_items;
+SELECT * FROM order_items;
+
+--ORDERS
+
+CREATE TABLE orders
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+TBLPROPERTIES ('avro.schema.url' = '/user/cloudera/cca175/retail_db_avro_schemas/sqoop_import_orders.avsc');
+
+LOAD DATA INPATH '/user/cloudera/cca175/retail_db_avro_format/orders' OVERWRITE INTO TABLE orders;
+
+SELECT COUNT(*) FROM orders;
+SELECT * FROM orders;

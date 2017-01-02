@@ -1,0 +1,24 @@
+#Components
+
+NC.sources = s1
+NC.channels = c1
+NC.sinks = k1
+
+#Source Components
+NC.sources.s1.type = exec
+NC.sources.s1.command = tail -F /opt/gen_logs/logs/access.log
+
+#Sink Components
+NC.sinks.k1.type = hdfs
+NC.sinks.k1.hdfs.path = /user/cloudera/cca175/flume/ExecToHdfsAsDataStream
+NC.sinks.k1.hdfs.fileType = DataStream
+NC.sinks.k1.rollCount = 10
+
+#Channel Components
+NC.channels.c1.type = file
+NC.channels.c1.capacity = 1000
+NC.channels.c1.transactionCapacity = 100
+
+#Linkages
+NC.sources.s1.channels = c1
+NC.sinks.k1.channel = c1

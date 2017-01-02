@@ -1,0 +1,24 @@
+#All Components 
+ExecLogToHdfs.sources = s1
+ExecLogToHdfs.channels = c1
+ExecLogToHdfs.sinks = k1
+
+#Source Components
+ExecLogToHdfs.sources.s1.type = exec
+ExecLogToHdfs.sources.s1.command = tail - F /var/logs/messages
+
+#Channel Components
+ExecLogToHdfs.channels.c1.type = FILE
+ExecLogToHdfs.channels.c1.capacity = 1000
+ExecLogToHdfs.channels.c1.transactionCapacity = 100
+
+#Sinks Components
+ExecLogToHdfs.sinks.k1.type = hdfs
+ExecLogToHdfs.sinks.k1.hdfs.path = /user/cloudera/cca175/flume/ExecLogToHdfs
+ExecLogToHdfs.sinks.k1.hdfs.fileSuffix = .log
+ExecLogToHdfs.sinks.k1.hdfs.rollCount =100
+ExecLogToHdfs.sinks.k1.hdfs.fileType = DataStream
+
+#Linkages
+ExecLogToHdfs.sources.s1.channels = c1
+ExecLogToHdfs.sinks.k1.channel = c1

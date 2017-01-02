@@ -1,0 +1,23 @@
+sqoop import-all-tables \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--as-parquetfile \
+--warehouse-dir /user/cloudera/cca175/retail_db_as_parquet \
+--direct
+
+
+CREATE DATABASE retaildb_as_parquet;
+USE retaildb_as_parquet;
+CREATE TABLE products
+(
+
+)
+STORED AS parquet
+LOCATION '/user/hive/warehouse/retaildb_as_parquet.db';
+
+LOAD DATA INPATH '/user/cloudera/cca175/retail_db_as_parquet/products/data';
+
+
+/user/cloudera/cca175/retail_db_parquet_data/products/.metadata/schemas
+/user/cloudera/cca175/retail_db_parquet_data/products/data
