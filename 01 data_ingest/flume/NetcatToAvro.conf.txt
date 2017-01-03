@@ -1,0 +1,20 @@
+#Netcat To Avro
+
+agent7500.sources = s1
+agent7500.sinks = k1
+agent7500.channels = c1
+
+agent7500.sources.s1.type = netcat
+agent7500.sources.s1.bind = localhost
+agent7500.sources.s1.port = 7500
+
+agent7500.sinks.k1.type = avro
+agent7500.sinks.k1.hostname = localhost
+agent7500.sinks.k1.port = 7800
+
+agent7500.channels.c1.type = memory
+agent7500.channels.c1.capacity = 1000
+agent7500.channels.c1.transactionCapacity = 100
+
+agent7500.sources.s1.channels = c1
+agent7500.sinks.k1.channel = c1

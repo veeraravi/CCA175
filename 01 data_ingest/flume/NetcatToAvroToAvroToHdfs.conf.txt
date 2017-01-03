@@ -1,0 +1,65 @@
+# NetCat (Source) To Avro (sink)
+
+agent4000.sources = src4 
+agent4000.channels = chl4 
+agent4000.sinks = snk4
+
+agent4000.sources.src4.type = netcat
+agent4000.sources.src4.bind = localhost
+agent4000.sources.src4.port = 4000
+
+agent4000.sinks.snk4.type = avro
+agent4000.sinks.snk4.hostname = localhost
+agent4000.sinks.snk4.port = 5000
+
+agent4000.channels.chl4.type = memory
+agent4000.channels.chl4.capacity = 1000
+agent4000.channels.chl4.transactionCapacity = 100
+
+agent4000.sources.src4.channels = chl4
+agent4000.sinks.snk4.channel = chl4
+#===============================
+# Avro (Source) To Avro (sink)
+
+agent5000.sources = src5
+agent5000.channels = chl5 
+agent5000.sinks = snk5
+
+agent5000.sources.src5.type = avro
+agent5000.sources.src5.hostname = localhost
+agent5000.sources.src5.port = 5000
+
+agent5000.sinks.snk5.type = avro
+agent5000.sinks.snk5.hostname = localhost
+agent5000.sinks.snk5.port = 6000
+
+agent5000.channels.chl5.type = memory
+agent5000.channels.chl5.capacity = 1000
+agent5000.channels.chl5.transactionCapacity = 100
+
+agent5000.sources.src5.channels = chl5
+agent5000.sinks.snk5.channel = chl5
+#===============================
+# Avro (Source) To Hdfs (sink)
+agent6000.sources = src6
+agent6000.channels = chl6 
+agent6000.sinks = snk6
+
+agent6000.sources.src6.type = avro
+agent6000.sources.src6.hostname = localhost
+agent6000.sources.src6.port = 6000
+
+agent6000.sinks.snk6.type = hdfs
+agent6000.sinks.snk6.hdfs.path = /user/cloudera/cca175/flume/netcatToAvroToAvroToHdfs
+agent6000.sinks.snk6.hdfs.rollCount = 5
+agent6000.sinks.snk6.hdfs.fileType = DataStream
+
+agent6000.channels.chl6.type = memory
+agent6000.channels.chl6.capacity = 1000
+agent6000.channels.chl6.transactionCapacity = 100
+
+agent6000.sources.src6.channels = chl6
+agent6000.sinks.snk6.channel = chl6
+
+
+

@@ -1,0 +1,43 @@
+# Spool-dir (Source) HDFS (Sink) Channel (memory)
+
+agent7100.sources = s1
+agent7100.sinks = k1
+agent7100.channels = c1
+
+agent7100.sources.s1.type = spooldir
+agent7100.sources.s1.spoolDir = /home/cloudera/data/inputs
+
+agent7100.sinks.k1.type =hdfs
+agent7100.sinks.k1.hdfs.path = /user/cloudera/cca175/flume/spoolDirToHdfs
+agent7100.sinks.k1.hdfs.fileType = DataStream
+
+agent7100.channels.c1.type = memory
+agent7100.channels.c1.capacity = 1000
+agent7100.channels.c1.transactionCapacity = 100
+
+agent7100.sources.s1.channels = c1
+agent7100.sinks.k1.channel = c1
+
+# Run the flume-agent by using
+#flume-ng agent -n agent7100 -c ./conf -f SpoolDirToHdfs.conf 
+# Move the files to the directory /home/cloudera/data/inputs
+[cloudera@quickstart data]$ cp file1.txt ./inputs/
+[cloudera@quickstart data]$ cp file2.txt ./inputs/
+[cloudera@quickstart data]$ cp file3.txt ./inputs/
+[cloudera@quickstart data]$ cp file4.txt ./inputs/
+[cloudera@quickstart data]$ cp file5.txt ./inputs/
+[cloudera@quickstart data]$ cp file6.txt ./inputs/
+
+
+[cloudera@quickstart data]$ cd ./inputs
+[cloudera@quickstart inputs]$ ls -lrt
+total 24
+-rw-rw-r-- 1 cloudera cloudera 131 Jan  2 21:35 file1.txt.COMPLETED
+-rw-rw-r-- 1 cloudera cloudera 131 Jan  2 21:35 file2.txt.COMPLETED
+-rw-rw-r-- 1 cloudera cloudera 131 Jan  2 21:35 file3.txt.COMPLETED
+-rw-rw-r-- 1 cloudera cloudera 131 Jan  2 21:35 file4.txt.COMPLETED
+-rw-rw-r-- 1 cloudera cloudera 131 Jan  2 21:35 file5.txt.COMPLETED
+-rw-rw-r-- 1 cloudera cloudera  61 Jan  2 21:36 file6.txt.COMPLETED
+[cloudera@quickstart inputs]$ cd ..
+[cloudera@quickstart data]$ 
+

@@ -1,0 +1,32 @@
+#Avro To HDFS by using avro-client
+
+#All Components
+agent7777.sources = s1
+agent7777.channels = c1
+agent7777.sinks = k1
+
+#Source
+agent7777.sources.s1.type = avro
+agent7777.sources.s1.bind = localhost
+agent7777.sources.s1.port = 7777
+
+#Sinks
+
+agent7777.sinks.k1.type = hdfs
+agent7777.sinks.k1.hdfs.path = /user/cloudera/cca175/flume/avroTohdfs
+agent7777.sinks.k1.hdfs.rollCount = 500
+agent7777.sinks.k1.hdfs.fileType = DataStream
+
+#Channels
+agent7777.channels.c1.type = memory
+agent7777.channels.c1.capacity = 1000
+agent7777.channels.c1.transactionCapacity = 100
+
+#Linkage
+agent7777.sources.s1.channels = c1
+agent7777.sinks.k1.channel = c1
+
+#flume-ng agent -n agent7777 -c ./conf -f AvroToHdfsAsDataStream.conf
+#The following command will send the contents of messages.log to to the Flume source listening on that ports
+#flume-ng avro-client -H localhost -p 7777 -F messages.log 
+
