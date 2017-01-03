@@ -1,0 +1,47 @@
+#SeqGen (Source) To Avro (Sink)
+agentseq.sources = s1
+agentseq.channels = c1
+agentseq.sinks = k1
+
+#Source
+agentseq.sources.s1.type = seq
+
+#Channel
+agentseq.channels.c1.type = memory
+agentseq.channels.c1.capacity  = 1000
+agentseq.channels.c1.transactionCapacity= 100
+
+#Sinks
+agentseq.sinks.k1.type = avro
+agentseq.sinks.k1.hostname = localhost
+agentseq.sinks.k1.port = 5678
+
+#Linkage
+agentseq.sources.s1.channels = c1
+agentseq.sinks.k1.channel = c1
+
+#Avro(Source) To HDFS(Sink)
+agentavro.sources = s2
+agentavro.channels = c2
+agentavro.sinks = k2
+
+#Source
+agentavro.sources.s2.type = avro
+agentavro.sources.s2.bind = localhost
+agentavro.sources.s2.port = 5678
+
+#Channel
+agentavro.channels.c2.type = memory
+agentavro.channels.c2.capacity  = 1000
+agentavro.channels.c2.transactionCapacity= 100
+
+
+#Sink
+agentavro.sinks.k2.type = hdfs
+agentavro.sinks.k2.hdfs.path = /user/cloudera/cca175/flume/seqToAvroToHdfs
+agentavro.sinks.k2.hdfs.rollCount = 1000
+agentavro.sinks.k2.hdfs.fileType = DataStream
+
+#Linkage
+agentavro.sources.s2.channels = c2
+agentavro.sinks.k2.channel = c2

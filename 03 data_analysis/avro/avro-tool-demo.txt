@@ -1,0 +1,41 @@
+[cloudera@quickstart avro]$ sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \ 
+--username root \
+--password cloudera \
+--table products \
+--target-dir /user/cloudera/cca175/avro/data/products \
+-m 5
+
+hadoop fs -get /user/cloudera/cca175/avro/data/products/*
+
+
+#To prints out the meta of a given .avro
+avro-tools getmeta part-m-00000.avro 
+
+#To prints out the Schema of a given .avro
+avro-tools getschema part-m-00000.avro 
+
+#To Store the meta of a given .avro as .avsc file
+avro-tools getmeta part-m-00000.avro > part-m-00000-getmeta.avsc
+
+#To Store the Schema of a given .avro as .avsc file
+avro-tools getschema part-m-00000.avro > part-m-00000-getschema.avsc
+#======================================================================================================================================================
+#Syntax of avro-tools cat
+[cloudera@quickstart data]$ avro-tools cat help
+cat --offset <offset> --limit <limit> --samplerate <samplerate> [input-files...] output-file
+
+#To cat few records (limit) - to direct out to stdout
+avro-tools cat part-m-00000.avro --limit 2 - 
+
+# How to copy first 5 records from a .avro file to another .avro (new File)
+avro-tools cat --offset 1 --limit 5 part-m-00000.avro first-5-from-part-m-0000.avro
+
+# How to copy 6 to 10 records from a .avro file to another .avro (new File)
+avro-tools cat --offset 6 --limit 5 part-m-00000.avro record-6-10-part-m-00000.avro
+#======================================================================================================================================================
+# To compile a given .avsc into java code
+ avro-tools compile -string schema ./schemas ./javacode
+
+
+

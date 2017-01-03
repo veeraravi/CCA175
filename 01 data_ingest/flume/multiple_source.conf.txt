@@ -1,0 +1,59 @@
+agent4000.sources = src4000
+agent4000.channels = chl4000
+agent4000.sinks = snk4000
+
+agent4000.sources.src4000.type = avro
+agent4000.sources.src4000.bind = localhost
+agent4000.sources.src4000.port = 4000
+
+agent4000.sinks.snk4000.type = avro
+agent4000.sinks.snk4000.hostname = localhost	
+agent4000.sinks.snk4000.port = 5000
+
+agent4000.channels.chl4000.type = memory
+agent4000.channels.chl4000.capacity = 1000
+agent4000.channels.chl4000.transactionCapacity = 100
+
+agent4000.sources.src4000.channels = chl4000
+agent4000.sinks.snk4000.channel = chl4000
+
+
+agent5000.sources = src5000
+agent5000.channels = chl5000
+agent5000.sinks = snk5000
+
+agent5000.sources.src5000.type = avro
+agent5000.sources.src5000.bind = localhost
+agent5000.sources.src5000.port = 5000
+
+agent5000.sinks.snk5000.type = avro
+agent5000.sinks.snk5000.hostname = localhost	
+agent5000.sinks.snk5000.port = 6000
+
+agent5000.channels.chl5000.type = memory
+agent5000.channels.chl5000.capacity = 1000
+agent5000.channels.chl5000.transactionCapacity = 100
+
+agent5000.sources.src5000.channels = chl5000
+agent5000.sinks.snk5000.channel = chl5000
+
+agent6000.sources = src6000
+agent6000.channels = chl6000
+agent6000.sinks = snk6000
+
+agent6000.sources.src6000.type = avro
+agent6000.sources.src6000.bind = localhost
+agent6000.sources.src6000.port = 6000
+
+agent6000.sinks.snk6000.type = hdfs
+agent6000.sinks.snk6000.hdfs.path = /user/cloudera/cca175/flume/multiplesource	
+agent6000.sinks.snk6000.hdfs.rollCount = 5
+agent6000.sinks.snk6000.hdfs.fileType = DataStream
+
+agent6000.channels.chl6000.type = memory
+agent6000.channels.chl6000.capacity = 1000
+agent6000.channels.chl6000.transactionCapacity = 100
+
+agent6000.sources.src6000.channels = chl6000
+agent6000.sinks.snk6000.channel = chl6000
+

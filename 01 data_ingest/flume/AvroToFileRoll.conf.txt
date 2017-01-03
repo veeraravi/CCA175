@@ -1,0 +1,22 @@
+# Avro(Source) - JDBC(Channel) - FILE_ROLL(Sink)
+agentAvro.sources = s1
+agentAvro.channels = c1
+agentAvro.sinks = k1
+
+#Source
+agentAvro.sources.s1.type = avro
+agentAvro.sources.s1.bind = localhost
+agentAvro.sources.s1.port = 7777
+
+#Sinks
+
+agentAvro.sinks.k1.type = FILE_ROLL
+agentAvro.sinks.k1.sink.directory = /home/cloudera/demo/flume/copyOfData
+agentAvro.sinks.k1.sink.rollInterval = 0
+
+#Channels
+agentAvro.channels.c1.type = jdbc
+
+#Linkage
+agentAvro.sources.s1.channels = c1
+agentAvro.sinks.k1.channel = c1
