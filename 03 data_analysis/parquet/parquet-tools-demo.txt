@@ -1,0 +1,53 @@
+sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+-table products \
+--target-dir /user/cloudera/data/mysql/products_as_parquet \
+--delete-target-dir \
+--as-parquetfile \
+-m 5
+
+
+parquet-tools --help
+parquet-tools -h 
+
+hadoop fs -get /user/cloudera/data/mysql/products_as_parquet/*.parquet
+[cloudera@quickstart data]$ ls -lrt
+total 72
+-rw-r--r-- 1 cloudera cloudera 14769 Jan  3 14:07 066a9b88-1b98-447d-aec3-4a07b2031f06.parquet
+-rw-r--r-- 1 cloudera cloudera 13242 Jan  3 14:07 4dbba209-7cbf-4cf5-8afb-e7d87143bfa9.parquet
+-rw-r--r-- 1 cloudera cloudera 11261 Jan  3 14:07 5f955c55-5c4b-410d-bd0c-86cefe937fd1.parquet
+-rw-r--r-- 1 cloudera cloudera 11940 Jan  3 14:07 6cea370d-de17-46ee-b689-d2c7f59a7468.parquet
+-rw-r--r-- 1 cloudera cloudera 13913 Jan  3 14:07 a908ce23-2ec2-46a7-9f34-12ec21cf33e9.parquet
+
+
+#To get the meta from the parquet file
+
+parquet-tools meta 066a9b88-1b98-447d-aec3-4a07b2031f06.parquet
+
+parquet-tools meta 066a9b88-1b98-447d-aec3-4a07b2031f06.parquet > 
+
+parquet-tools schema 066a9b88-1b98-447d-aec3-4a07b2031f06.parquet 
+
+
+Parquet to Json
+================
+parquet-tools cat -j 066a9b88-1b98-447d-aec3-4a07b2031f06.parquet
+
+
+Parquet : to display
+==================
+parquet-tools cat 066a9b88-1b98-447d-aec3-4a07b2031f06.parquet
+
+
+
+
+
+
+
+
+
+
+
+
+
