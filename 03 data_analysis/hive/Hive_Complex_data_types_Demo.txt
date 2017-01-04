@@ -1,26 +1,47 @@
-complex_data.txt
+USE supermarket;
 
-10001|Mr.A|mon,tue,wed,thu,fri|charlotte,28277,NC
-10002|Mr.B|mon,tue,wed|concord,28262,NC
-10003|Mr.C|wed,thu,fri|fortmill,28310,SC
-10004|Mr.D|tue,wed,thu,sat,sun|york,28308,SC
-10005|Mr.E|mon|gastonia,28777,NC
-10006|Mr.F|mon,tue|charlotte,28277,SC
-10007|Mr.G|wed,thu,fri|charlotte,28277,SC
-10008|Mr.H|mon,tue,wed|gastonia,28777,NC
-10009|Mr.I|mon,wed,fri|charlotte,28277,SC
-10010|Mr.J|mon,thu,sat|charlotte,28277,SC
+--DROP Table 
+DROP TABLE IF EXISTS employee_schedule;
+
+--CREATE TABLE with complex types
 
 CREATE TABLE employee_schedule
 ( eid INT,
   ename STRING,
   eschedule ARRAY<STRING>,
-  elocation STRUCT<city:STRING, zip:INT, state:STRING>
+  elocation STRUCT<city:STRING, zip:INT, state:STRING>,
+  econtacts MAP<string,INT>
 )
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '|'
-COLLECTION ITERMS TERMINATED BY ',';
+COLLECTION ITEMS TERMINATED BY ','
+MAP KEYS TERMINATED BY ':';
 
-LOAD DATA INPATH '/user/cloudera/cca175/employee/complex_data.txt' overwrite into TABLE employee_schedule;
+--load data into employee_schedule
+LOAD DATA INPATH '/user/cloudera/cca175/employee/employee_schedule.txt' overwrite into TABLE employee_schedule;
 
-select * from employee_schedule;
+--get all the records
+SELECT * FROM employee_schedule;
+
+--get the city, zip , state, mobilecontact, home and work contacts
+select eid, ename, elocation, econtacts, 
+elocation.city, 
+elocation.zip, 
+elocation.state , 
+econtacts["mobile"] ,
+econtacts["home"], 
+econtacts["work"]
+from employee_schedule;
+
+--get the employee details who are from zip code 28277
+SELECT * FROM employee_schedule where elocation.zip = 28277;
+
+--get the employee details who have mobile number as 880
+SELECT * FROM employee_schedule where econtacts["mobile"] = 880;
+
+SELECT eid, eschedule[0], eschedule[1],eschedule[2], eschedule[3] , eschedule[4] from employee_schedule;
+
+SELECT * FROM employee_schedule where eschedule[4] = "fri";
+
+--get the employees who comes on 5th also
+SELECT * FROM employee_schedule where eschedule[4] != '';

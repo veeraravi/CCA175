@@ -1,0 +1,13 @@
+10001|Mr.A|mon,tue,wed,thu,fri|charlotte,28277,NC|mobile:980,home:704,work:704
+10002|Mr.B|mon,tue,wed|concord,28262,NC|mobile:981,home:704,work:704
+10003|Mr.C|wed,thu,fri|fortmill,28310,SC|mobile:980,home:704,work:704
+10004|Mr.D|tue,wed,thu,sat,sun|york,28308,SC|mobile:983,home:704,work:704
+10005|Mr.E|mon|gastonia,28777,NC|mobile:980,home:704,work:704
+10006|Mr.F|mon,tue|charlotte,28277,SC|mobile:980,home:704,work:704
+10007|Mr.G|wed,thu,fri|charlotte,28277,SC|mobile:980,home:704,work:704
+10008|Mr.H|mon,tue,wed|gastonia,28777,NC|mobile:880,home:704,work:704
+10009|Mr.I|mon,wed,fri|charlotte,28277,SC|mobile:980,home:704,work:704
+10010|Mr.J|mon,thu,sat|charlotte,28277,SC|mobile:980,home:704,work:704
+10011|Mr.K|mon,,,thu,sun|charlotte,28277,NC|mobile:980,home:703,work:703
+10012|Mr.L|,tue,,thu,sun|charlotte,28277,NC|mobile:980,home:703,work:703
+10013|Mr.M|,,wed,thu,sun|charlotte,28277,NC|mobile:980,home:703,work:703
