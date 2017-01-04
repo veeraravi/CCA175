@@ -43,5 +43,5 @@ SELECT eid, eschedule[0], eschedule[1],eschedule[2], eschedule[3] , eschedule[4]
 
 SELECT * FROM employee_schedule where eschedule[4] = "fri";
 
---get the employees who comes on 5th also
+--get the employees who comes on 5th day also
 SELECT * FROM employee_schedule where eschedule[4] != '';
