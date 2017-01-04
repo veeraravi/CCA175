@@ -1,0 +1,26 @@
+complex_data.txt
+
+10001|Mr.A|mon,tue,wed,thu,fri|charlotte,28277,NC
+10002|Mr.B|mon,tue,wed|concord,28262,NC
+10003|Mr.C|wed,thu,fri|fortmill,28310,SC
+10004|Mr.D|tue,wed,thu,sat,sun|york,28308,SC
+10005|Mr.E|mon|gastonia,28777,NC
+10006|Mr.F|mon,tue|charlotte,28277,SC
+10007|Mr.G|wed,thu,fri|charlotte,28277,SC
+10008|Mr.H|mon,tue,wed|gastonia,28777,NC
+10009|Mr.I|mon,wed,fri|charlotte,28277,SC
+10010|Mr.J|mon,thu,sat|charlotte,28277,SC
+
+CREATE TABLE employee_schedule
+( eid INT,
+  ename STRING,
+  eschedule ARRAY<STRING>,
+  elocation STRUCT<city:STRING, zip:INT, state:STRING>
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '|'
+COLLECTION ITERMS TERMINATED BY ',';
+
+LOAD DATA INPATH '/user/cloudera/cca175/employee/complex_data.txt' overwrite into TABLE employee_schedule;
+
+select * from employee_schedule;

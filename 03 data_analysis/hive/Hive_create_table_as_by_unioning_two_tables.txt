@@ -1,0 +1,26 @@
+use supermarket;
+DROP TABLE IF EXISTS employee_inner;
+CREATE TABLE employee_inner
+(eid INT,
+ ename STRING,
+ eage INT,
+ esex STRING)
+ ROW FORMAT DELIMITED
+ FIELDS TERMINATED BY ',';
+ 
+ DROP TABLE IF EXISTS employee_outer;
+ CREATE TABLE employee_outer
+(eid INT,
+ ename STRING,
+ eage INT,
+ esex STRING)
+  ROW FORMAT DELIMITED
+ FIELDS TERMINATED BY ',';
+ 
+ LOAD DATA INPATH '/user/cloudera/cca175/employee/inner.txt' overwrite into table employee_inner;
+ LOAD DATA INPATH '/user/cloudera/cca175/employee/outer.txt' overwrite into table employee_outer;
+ 
+ CREATE table employee_inner_outer AS 
+ SELECT i.* from employee_inner i where i.esex = 'male'
+ UNION All
+ SELECT o.* from employee_outer o where o.esex = 'male';
