@@ -1,0 +1,24 @@
+
+Without --options-file
+======================
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table products \
+--target-dir /user/cloudera/cca175/retail_db/products/ \
+-m 5
+
+With --options-file
+======================
+sqoop --options-file mysql_import_a_table_options.txt \
+--table products \
+--target-dir /user/cloudera/cca175/retail_db/products/ \
+-m 5
+
+With --options-file
+======================
+sqoop --options-file mysql_import_a_table_options.txt --table departments \
+--target-dir /user/cloudera/cca175/retail_db/departments/ \
+-m 5
+

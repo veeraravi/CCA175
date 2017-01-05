@@ -1,0 +1,135 @@
+Argument	Description
+--append	Append data to an existing dataset in HDFS
+--as-avrodatafile	Imports data to Avro Data Files
+--as-sequencefile	Imports data to SequenceFiles
+--as-textfile	Imports data as plain text (default)
+--as-parquetfile	Imports data to Parquet Files
+--boundary-query <statement>	Boundary query to use for creating splits
+--columns <col,col,col…>	Columns to import from table
+--delete-target-dir	Delete the import target directory if it exists
+--direct	Use direct connector if exists for the database
+--fetch-size <n>	Number of entries to read from database at once.
+--inline-lob-limit <n>	Set the maximum size for an inline LOB
+-m,--num-mappers <n>	Use n map tasks to import in parallel
+-e,--query <statement>	Import the results of statement.
+--split-by <column-name>	Column of the table used to split work units
+--table <table-name>	Table to read
+--target-dir <dir>	HDFS destination dir
+--warehouse-dir <dir>	HDFS parent for table destination
+--where <where clause>	WHERE clause to use during import
+-z,--compress	Enable compression
+--compression-codec <c>	Use Hadoop codec (default gzip)
+--null-string <null-string>	The string to be written for a null value for string columns
+--null-non-string <null-string>	The string to be written for a null value for non-string columns
+
+--append - Append data to an existing dataset in HDFS
+=====================================================
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table proucts \
+--target-dir /user/cloudera/cca175/retail-db/products \
+--append
+-m 5
+
+--as-avrodatafile - Imports data to Avro Data Files
+=====================================================
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table proucts \
+--target-dir /user/cloudera/cca175/retail-db/products_as_avro_format \
+--as-avrodatafile \
+-m 5
+
+
+--as-sequencefile - Imports data to sequence Data Files
+=====================================================
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table proucts \
+--target-dir /user/cloudera/cca175/retail-db/products_as_sequencefile_format \
+--as-sequencefile \
+-m 5
+
+--as-parquetfile - Imports data to Parquet Data Files
+=====================================================
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table proucts \
+--target-dir /user/cloudera/cca175/retail-db/products_as_parquet_format \
+--as-parquetfile \
+-m 5
+
+--boundary-query <statement>	Boundary query to use for creating splits ???????
+
+--columns <col,col,col…>	Columns to import from table
+========================================================
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table proucts \
+--columns "product_id, product_name \
+--target-dir /user/cloudera/cca175/retail-db/products_specific_columns_only \
+-m 5
+
+--where <where clause>	WHERE clause to use during import
+========================================================
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table proucts \
+--where "product_id > 1000" \
+--target-dir /user/cloudera/cca175/retail-db/products_with_where_clause \
+-m 5
+
+--delete-target-dir	Delete the import target directory if it exists
+===================================================================
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table proucts \
+--columns "product_id, product_name" \
+--target-dir /user/cloudera/cca175/retail-db/products_specific_columns_only \
+--delete-target-dir \
+-m 5
+
+--direct	Use direct connector if exists for the database ????? (Mysql does not support direct option)
+========================================================================================================
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table proucts \
+--target-dir /user/cloudera/cca175/retail-db/products \
+--delete-target-dir \
+-m 5
+
+-e,--query <statement>	Import the results of statement
+========================================================
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--query "select product_id, product_name from products" \
+--target-dir /user/cloudera/cca175/retail-db/products_using_query \
+--delete-target-dir \
+-m 5
+
+-z,--compress	Enable compression
+--compression-codec <c>	Use Hadoop codec (default gzip)
+
+
+
+
+
+
