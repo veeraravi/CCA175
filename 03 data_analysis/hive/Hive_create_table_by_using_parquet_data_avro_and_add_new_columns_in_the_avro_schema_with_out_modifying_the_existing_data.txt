@@ -1,0 +1,133 @@
+--Mysql table to HDFS as Avro Data File
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table products \
+--as-avrodatafile \
+--target-dir /user/cloudera/cca175/retail_db/products_in_avro_format/data \
+-delete-target-dir \
+-m 1
+
+--Get the avro schema from the avro data file
+
+--Get the HDFS data file into local system
+hadoop fs -get /user/cloudera/cca175/retail_db/products_in_avro_format/data/*.avro
+
+avro-tools getschema part-m-00000.avro > products.avsc
+
+hadoop fs -put products.avsc /user/cloudera/cca175/retail_db/products_in_avro_format/schemas
+
+--Create a table in Hive by using HDFS avro file and external schema file
+
+USE retaildb_as_avro;
+
+CREATE TABLE products_backup
+STORED AS AVRO
+TBLPROPERTIES ('avro.schema.url'='/user/cloudera/cca175/retail_db/products_in_avro_format/schemas/products.avsc');
+
+LOAD DATA INPATH '/user/cloudera/cca175/retail_db/products_in_avro_format/data' OVERWRITE INTO TABLE products_backup;
+
+SELECT * FROM products_backup LIMIT 10;
+SELECT * FROM products_backup WHERE product_id = 20000;
+
+DESCRIBE FORMATTED products_backup;
+
+INSERT INTO products_backup VALUES (20000,5, "My Proudct", " Product", 129.00, "abc corporation", 2016, "http://////");
+
+Schema of products.avsc (as per mysql retail_db)
+===============================================
+{
+  "type" : "record",
+  "name" : "sqoop_import_products",
+  "doc" : "Sqoop import of products",
+  "fields" : [ {
+    "name" : "product_id",
+    "type" : [ "int", "null" ],
+    "columnName" : "product_id",
+    "sqlType" : "4"
+  }, {
+    "name" : "product_category_id",
+    "type" : [ "int", "null" ],
+    "columnName" : "product_category_id",
+    "sqlType" : "4"
+  }, {
+    "name" : "product_name",
+    "type" : [ "string", "null" ],
+    "columnName" : "product_name",
+    "sqlType" : "12"
+  }, {
+    "name" : "product_description",
+    "type" : [ "string", "null" ],
+    "columnName" : "product_description",
+    "sqlType" : "12"
+  }, {
+    "name" : "product_price",
+    "type" : [ "float", "null" ],
+    "columnName" : "product_price",
+    "sqlType" : "7"
+  }, {
+    "name" : "product_image",
+    "type" : [ "string", "null" ],
+    "columnName" : "product_image",
+    "sqlType" : "12"
+  } ],
+  "tableName" : "products"
+}
+
+
+
+schema of products.avsc (Added two new columns)
+===============================================
+{
+  "type" : "record",
+  "name" : "sqoop_import_products",
+  "doc" : "Sqoop import of products",
+  "fields" : [ {
+    "name" : "product_id",
+    "type" : [ "int", "null" ],
+    "columnName" : "product_id",
+    "sqlType" : "4"
+  }, {
+    "name" : "product_category_id",
+    "type" : [ "int", "null" ],
+    "columnName" : "product_category_id",
+    "sqlType" : "4"
+  }, {
+    "name" : "product_name",
+    "type" : [ "string", "null" ],
+    "columnName" : "product_name",
+    "sqlType" : "12"
+  }, {
+    "name" : "product_description",
+    "type" : [ "string", "null" ],
+    "columnName" : "product_description",
+    "sqlType" : "12"
+  }, {
+    "name" : "product_price",
+    "type" : [ "float", "null" ],
+    "columnName" : "product_price",
+    "sqlType" : "7"
+  }, {
+    "name" : "product_created_by",
+    "type" : [ "string", "null" ],
+    "columnName" : "product_created_by",
+    "sqlType" : "12",
+   "default" : "Not Available"
+ }, {
+    "name" : "product_introduced_in",
+    "type" : [ "int", "null" ],
+    "columnName" : "product_introduced_in",
+    "sqlType" : "4",
+   "default" : 1999
+  }, { 
+    "name" : "product_image",
+    "type" : [ "string", "null" ],
+    "columnName" : "product_image",
+    "sqlType" : "12"
+  } ],
+  "tableName" : "products"
+}
+
+
+
