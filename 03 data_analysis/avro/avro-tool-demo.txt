@@ -4,6 +4,7 @@
 --password cloudera \
 --table products \
 --target-dir /user/cloudera/cca175/avro/data/products \
+--as-avrodatafile \
 -m 5
 
 hadoop fs -get /user/cloudera/cca175/avro/data/products/*
