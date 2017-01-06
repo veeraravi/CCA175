@@ -1,0 +1,19 @@
+//wordCount 
+
+val inputRdd = sc.textFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca175/spark/data/input/student_basic.txt")
+
+val wordRdd = inputRdd.flatMap(_.split(",")).map(x=> (x,1)).reduceByKey(_ + _)
+
+wordRdd.saveAsTextFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca175/spark/data/output/student_basic_wordCount")
+
+
+//Cumulative word count
+
+inputRdd.flatMap(_.split(",")).map(x=> 1).reduce( (a,b) => (a+b))
+Int=68
+
+inputRdd.flatMap(_.split(",")).map(x=> 1).fold(0)(_ + _)
+Int=68
+
+
+

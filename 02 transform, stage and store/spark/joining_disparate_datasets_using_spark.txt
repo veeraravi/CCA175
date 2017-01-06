@@ -1,6 +1,9 @@
-case class basic(sid:Int, sname:String, sage:Int, ssex:String)
-case class address(sid:Int, scity:String, szip:Int, sstate:String)
-
+case class basic(sid:Int, sname:String, sage:Int, ssex:String){
+override def toString = s"$sid,$sname,$sage,$ssex"
+}
+case class address(sid:Int, scity:String, szip:Int, sstate:String){
+override def toString = s"$sid,$scity,$szip,$sstate"
+}
 
 val basicRdd ={ sc.textFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca175/spark/data/input/student_basic.txt").
                  map{x=> val y = x.split(","); new basic(y(0).toInt, y(1),y(2).toInt, y(3))}} 
@@ -24,3 +27,9 @@ val addressRDD = {sc.textFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca
 basicRDD.join(addressRDD).collect()
 
 basicRDD.leftOuterJoin(addressRDD).collect()
+
+val maleRdd = basicRdd.filter(_.ssex == "Male")
+val femaleRdd = basicRdd.filter(_.ssex == "Female")
+maleRdd.saveAsTextFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca175/spark/data/output/maleStudents")
+femaleRdd.saveAsTextFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca175/spark/data/output/femaleStudents")
+
