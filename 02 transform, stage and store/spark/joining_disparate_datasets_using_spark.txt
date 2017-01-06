@@ -1,0 +1,26 @@
+case class basic(sid:Int, sname:String, sage:Int, ssex:String)
+case class address(sid:Int, scity:String, szip:Int, sstate:String)
+
+
+val basicRdd ={ sc.textFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca175/spark/data/input/student_basic.txt").
+                 map{x=> val y = x.split(","); new basic(y(0).toInt, y(1),y(2).toInt, y(3))}} 
+				 
+val addressRdd = {sc.textFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca175/spark/data/input/student_address.txt").
+                 map{x=> val y = x.split(","); new address(y(0).toInt, y(1),y(2).toInt, y(3))}}
+				 
+
+val basicPairRdd = basicRdd.map{x=> (x.sid, x)}
+val addressPairRdd = addressRdd.map{x=> (x.sid, x)}
+
+
+
+val basicRDD ={ sc.textFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca175/spark/data/input/student_basic.txt").
+                 map{x=> val y = x.split(","); (y(0).toInt, (y(0).toInt, y(1),y(2).toInt, y(3)))}} 
+				 
+val addressRDD = {sc.textFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca175/spark/data/input/student_address.txt").
+                 map{x=> val y = x.split(","); (y(0).toInt, (y(0).toInt, y(1),y(2).toInt, y(3)))}}
+				 
+				 
+basicRDD.join(addressRDD).collect()
+
+basicRDD.leftOuterJoin(addressRDD).collect()

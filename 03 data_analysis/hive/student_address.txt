@@ -1,0 +1,11 @@
+1000,charlotte,28277,NC
+1001,charlotte,28247,NC
+1002,charlotte,28217,NC
+1006,charlotte,28276,NC
+1007,charlotte,28274,NC
+1008,charlotte,28277,NC
+1009,charlotte,28271,NC
+1013,charlotte,28279,NC
+1014,charlotte,28271,NC
+1015,charlotte,28273,NC
+1016,charlotte,28273,NC

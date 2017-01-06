@@ -1,0 +1,16 @@
+//Load data from HDFS
+
+val inputRDD = sc.textFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca175/spark/data/input/student_basic.txt")
+
+inputRDD.count()
+
+inputRDD.foreach(println)
+
+//store results back to HDFS using Spark
+
+inputRDD.saveAsTextFile("hdfs://quickstart.cloudera:8020/user/cloudera/cca175/spark/data/output")
+
+====================================================================================================================
+
+
+
