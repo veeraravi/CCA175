@@ -1,0 +1,4 @@
+spark-submit --class "RddMap" --master local[2] /home/cloudera/myprojects/target/scala-2.10/simple-project_2.10-1.0.jar
+spark-submit --class "RddFlatMap" --master local[2] /home/cloudera/myprojects/target/scala-2.10/simple-project_2.10-1.0.jar
+spark-submit --class "RddSumOfNumbers" --master local[2] /home/cloudera/myprojects/target/scala-2.10/simple-project_2.10-1.0.jar
+spark-submit --class "Rdd_products_not_in_order_items" --master local[2] /home/cloudera/myprojects/target/scala-2.10/simple-project_2.10-1.0.jar
