@@ -1,0 +1,22 @@
+class orders(object):
+	def __init__(self,order_id,order_date,order_customer_id,order_status):
+		self.order_id=order_id
+		self.order_date=order_date
+		self.order_customer_id=order_customer_id
+		self.order_status=order_status
+	def showOrders(self):
+		print "orderID: ", self.order_id, "OrderDate:", self.order_date,
+		"OrderCustomer:", self.order_customer_id, "OrderStatus:", self.order_status
+class order_items(object):
+	def __init__(self,order_item_id,order_item_order_id,order_item_product_id,
+	order_item_quanity,order_item_subtotal,order_item_product_price):
+		self.order_item_id = order_item_id
+		self.order_item_order_id = order_item_order_id
+		self.order_item_product_id=order_item_product_id
+		self.order_item_quanity=order_item_quanity
+		self.order_item_subtotal = order_item_subtotal
+		self.order_item_product_price = order_item_product_price
+		
+	def showOrderItems(self):
+		print "order_item_id: ", self.order_item_id, "order_item_order_id: ", 
+		self.order_item_order_id
