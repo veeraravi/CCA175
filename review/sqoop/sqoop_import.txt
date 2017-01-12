@@ -1,0 +1,169 @@
+#To import all tables and does not support target-dir so warehouse-dir if
+#needed
+sqoop import-all-tables --connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--warehouse-dir /user/cloudera/cca175/review/sqoop_import/mysql_all_tables \
+-m 5
+
+# Import only one table (All Records)
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table departments \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_departments \
+-m 5
+
+#Import ony one table with query option but target-dir is mandatory
+#if -m > 1 then need to use split-by
+sqoop import \
+-connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--query "select department_id, department_name from departments WHERE
+\$CONDITIONS" \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_departments_query \
+-m 1
+
+#Specific columns
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table departments \
+--columns 'department_name , department_id' \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_departments_columns \
+-m 5
+
+#As Avro Data File
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table departments \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_departments_as_avro \
+--as-avrodatafile \
+-m 5
+
+#As Parquet File
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table categories \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_categories_as_parquet \
+--as-parquetfile \
+-m 5
+
+#As Sequence File
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table categories \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_categories_as_sequence \
+--as-sequencefile \
+-m 6
+
+#As Text File (By Default) with lines and fields terminated by
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table categories \
+--target-dir /user/cloudera/cca175/review/sqoop_import
+/mysql_categories_delimited \
+--fields-terminated-by '|' \
+--lines-terminated-by '\n' \
+--as-textfile \
+-m 5
+
+#Delete the existing target-dir 
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table departments \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_departments \
+--delete-target-dir \
+-m 5
+
+#Sql with -e AND num-mappers instead of -m
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+-e "select * from departments WHERE \$CONDITIONS" \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_departments_query_e \
+--delete-target-dir \
+--num-mappers 1
+
+
+#Fetch 20 rows only from orders 
+#Password file should be in the HdFS Cluster 
+#table names are CASE_sensitive
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password-file /user/cloudera/cca175/review/mysql.pwd \
+-e "SELECT * FROM ORDERS WHERE \$CONDITIONS limit 100" \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_orders_100_rows \
+-m 1
+
+#Fetch all completed orders 
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password-file /user/cloudera/cca175/review/mysql.pwd \
+--table orders \
+--where "order_status='COMPLETE'" \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_orders_completed \
+-m 5
+
+# Fetch all completed orders (order_id, order_date, order_customer_id)
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password-file /user/cloudera/cca175/review/mysql.pwd  \
+--table orders \
+--columns 'order_id, order_date, order_customer_id' \
+--where "order_status='COMPLETE'" \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_orders_completed_using_columns \
+-m 5
+
+#Add three new records in the mysql DB retail_db.departments
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password-file /user/cloudera/cca175/review/mysql.pwd \
+--table departments \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_departments_all \
+--append \
+-m 2
+
+#Add three new records in the mysql DB retail_Db.departments
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password-file /user/cloudera/cca175/review/mysql.pwd \
+--table departments \
+--check-column department_id \
+--incremental lastmodified \
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_departments_all \
+--append \
+-m 2
+
+# with last-value 10 and check-column and incremental append
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password-file /user/cloudera/cca175/review/mysql.pwd \
+--table departments \
+--check-column department_id \
+--incremental lastmodified \
+--last-value 10
+--target-dir /user/cloudera/cca175/review/sqoop_import/mysql_departments_all \
+--append \
+-m 2
+
