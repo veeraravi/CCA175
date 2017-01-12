@@ -1,0 +1,17 @@
+sources
+========
+netcat
+exec
+seq
+avro
+spool-dir
+
+Channels
+========
+memory
+
+sinks
+=====
+hdfs
+logger
+FILE_ROLL

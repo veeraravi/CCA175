@@ -15,3 +15,30 @@ table exits. By default this property is false.
 --hive-partition-key	Name of a hive field to partition are sharded on
 --hive-partition-value <v>	String-value that serves as partition key for this imported into hive in this job.
 --map-column-hive <map>	Override default mapping from SQL type to Hive type for configured columns.
+
+
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table products \
+--create-hive-table \
+--hive-import \
+--hive-table myproducts \
+--m 3
+
+
+CREATE DATABASE retaildb_mysql_to_hive;
+
+USE retaildb_mysql_to_hive;
+
+--hive-import	Import tables into Hive (Uses Hive’s default delimiters if none are set.)
+=========================================================================================
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table products \
+--hive-import \
+--m 3
+
