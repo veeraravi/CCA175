@@ -14,3 +14,4 @@ sinks
 =====
 hdfs
 logger
+FILE_ROLL
