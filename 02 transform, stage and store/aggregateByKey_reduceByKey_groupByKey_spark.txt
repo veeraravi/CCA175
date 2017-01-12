@@ -1,0 +1,83 @@
+scala> months.collect
+res2: Array[(String, Int)] = Array((a,100), (b,200), (a,100), (b,200))     
+
+reduceByKey() Vs aggregateByKey() Vs groupByKey
+===============================================
+
+aggregateByKey()
+===============
+
+scala> val months = sc.parallelize(List(("a",100),("b",200),("a",100),("b",200)))
+months: org.apache.spark.rdd.RDD[(String, Int)] = ParallelCollectionRDD[0] at parallelize at <console>:27
+
+scala> months.aggregateByKey(0)((a,b)=> a+b ,(x,y)=> x+y)
+res6: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[3] at aggregateByKey at <console>:30
+
+scala> months.aggregateByKey(0)((a,b)=> a+b ,(x,y)=> x+y).collect
+res7: Array[(String, Int)] = Array((b,400), (a,200))                            
+
+List((a,100), (b,200), (a,100), (b,200)) ===> List((a , List(100,100),(b , List(200,200))
+
+scala> months.aggregateByKey(List[Any]())( (a,b) => a:::b::Nil, (x,y) => x ::: y).collect()
+res11: Array[(String, List[Any])] = Array((b,List(200, 200)), (a,List(100, 100)))
+
+scala> months.aggregateByKey(List[Any]())( (a,b) => a:::b::Nil, (x,y) => x ::: y).collect().toMap
+res12: scala.collection.immutable.Map[String,List[Any]] = Map(b -> List(200, 200), a -> List(100, 100))
+
+reduceByKey()
+==============
+scala> months.reduceByKey(_+_).collect()
+res4: Array[(String, Int)] = Array((b,400), (a,200))    
+
+scala> months.reduceByKey(_+_).collect()
+res8: Array[(String, Int)] = Array((b,400), (a,200))
+
+groupByKey()
+============
+scala> months.groupByKey().collect()
+res9: Array[(String, Iterable[Int])] = Array((b,CompactBuffer(200, 200)), (a,CompactBuffer(100, 100)))
+
+scala> val nosRdd = sc.parallelize(List(("a",1),("a",2),("a",3),("b",5),("b",5),("b",5)),5)
+nosRdd: org.apache.spark.rdd.RDD[(String, Int)] = ParallelCollectionRDD[16] at parallelize at <console>:27
+
+scala> nosRdd.getNumPartitions
+res25: Int = 5
+
+scala> nosRdd.reduceByKey{case(x,y) => x + (y+5) }.collect
+res26: Array[(String, Int)] = Array((a,16), (b,25))                             
+
+scala> val nosRdd = sc.parallelize(List(("a",1),("a",2),("a",3),("b",5),("b",5),("b",5),("c",5),("c",5)),5)
+nosRdd: org.apache.spark.rdd.RDD[(String, Int)] = ParallelCollectionRDD[18] at parallelize at <console>:27
+
+scala> nosRdd.reduceByKey{case(x,y) => x + (y+5) }.collect
+res27: Array[(String, Int)] = Array((a,16), (b,25), (c,15))                     
+
+scala> nosRdd.collect()
+res28: Array[(String, Int)] = Array((a,1), (a,2), (a,3), (b,5), (b,5), (b,5), (c,5), (c,5))
+
+scala> nosRdd.reduceByKey(_+_).collect()
+res29: Array[(String, Int)] = Array((a,6), (b,15), (c,10))
+
+scala> nosRdd.aggregateByKey(0)( (a,b)=> a+b , (x,y) => x+y)
+res30: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[21] at aggregateByKey at <console>:30
+
+scala> nosRdd.aggregateByKey(0)( (a,b)=> a+b , (x,y) => x+y).collect
+res31: Array[(String, Int)] = Array((a,6), (b,15), (c,10))
+
+scala> nosRdd.groupByKey().collect()
+res32: Array[(String, Iterable[Int])] = Array((a,CompactBuffer(1, 2, 3)), (b,CompactBuffer(5, 5, 5)), (c,CompactBuffer(5, 5)))
+
+scala> nosRdd.groupByKey().map{case(x,y)=> x.y._2.sum}.collect
+<console>:30: error: value y is not a member of String
+              nosRdd.groupByKey().map{case(x,y)=> x.y._2.sum}.collect
+                                                    ^
+
+scala> nosRdd.groupByKey().map{case(x,y)=> (x,y._2.sum)}.collect
+<console>:30: error: value _2 is not a member of Iterable[Int]
+              nosRdd.groupByKey().map{case(x,y)=> (x,y._2.sum)}.collect
+                                                       ^
+
+scala> nosRdd.groupByKey().map{case(x,y)=> (x,y.sum)}.collect()
+res35: Array[(String, Int)] = Array((a,6), (b,15), (c,10))
+
+scala> 
