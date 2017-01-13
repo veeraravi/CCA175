@@ -1,0 +1,12 @@
+sqoop eval \
+--connect "jdbc:mysql://${hostname}:3306/studentdb" \
+--username root \
+--password cloudera \
+--query "select count(*) from student_basic"
+
+
+sqoop eval \
+--connect "jdbc:mysql://${hostname}:3306/studentdb" \
+--username root \
+--password cloudera \
+--query "select * from student_basic"

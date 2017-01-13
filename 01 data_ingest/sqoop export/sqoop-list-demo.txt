@@ -1,0 +1,10 @@
+sqoop list-databases \
+--connect "jdbc:mysql://${hostname}:3306" \
+--username root \
+--password cloudera \
+
+
+sqoop list-tables \
+--connect "jdbc:mysql://${hostname}:3306/studentdb" \
+--username root \
+--password cloudera \
