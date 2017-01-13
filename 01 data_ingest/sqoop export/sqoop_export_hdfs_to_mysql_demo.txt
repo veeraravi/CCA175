@@ -1,0 +1,56 @@
+#Sqoop export based on columns
+sqoop export \
+--connect "jdbc:mysql://${localhost}:3306/studentdb" \
+--username root \
+--password cloudera \
+--table student_basic \
+--columns "sid,sname" \
+--batch \
+--export-dir /user/cloudera/cca175/spark/input/student_basic_partial \
+-m 2
+sqoop export \
+--connect "jdbc:mysql://quickstart.cloudera:3306/studentdb" \
+--username root \
+--password cloudera \
+--table student_basic \
+--export-dir /user/cloudera/cca175/spark/input/student_basic \
+-m 5
+
+#Sqoop export few more add on records
+sqoop export \
+--connect "jdbc:mysql://${hostname}:3306/studentdb" \
+--username root \
+--password cloudera \
+--table student_basic \
+--export-dir /user/cloudera/cca175/spark/input/student_basic_add_on \
+-m 2
+
+#Sqoop export (initial)
+sqoop export \
+--connect "jdbc:mysql://quickstart.cloudera:3306/studentdb" \
+--username root \
+--password cloudera \
+--table student_basic \
+--export-dir /user/cloudera/cca175/spark/input/student_basic \
+-m 5
+
+
+sqoop export \
+--connect "jdbc:mysql://${hostname}:3306/studentdb" \
+--username root \
+--password cloudera \
+--table student_basic
+--export-dir /user/cloudera/cca175/spark/input/student_basic_add_on \
+-m 2
+
+#Sqoop export (Updates)
+sqoop export \
+--connect "jdbc:mysql://${hostname}:3306/studentdb" \
+--username root \
+--password cloudera \
+--table student_basic \
+--batch \
+--update-key sid \
+--update-mode allowinsert \
+--export-dir /user/cloudera/cca175/spark/input/student_basic_updates \
+-m 5
