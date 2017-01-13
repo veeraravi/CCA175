@@ -1,0 +1,36 @@
+CREATE DATABASE student_db;
+
+USE student_db;
+DROP TABLE student;
+CREATE TABLE student
+(
+   sid BIGINT,
+   sname STRUCT <fname:STRING, lname:STRING>,
+   saddress STRUCT <line1:STring, line2:STRING, city: STRING, zip: INT, state: STRING>,
+   smarks map<STRING,INT>
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '|'
+COLLECTION ITEMS TERMINATED BY ','
+MAP KEYS TERMINATED BY ':'
+STORED AS PARQUET;
+
+LOAD DATA INPATH '/user/cloudera/cca175/student/data.txt' OVERWRITE INTO TABLE student;
+SELECT * FROM student;
+
+
+10000|adam,smith|100 carmel road, po 12345, charlotte, 28277, nc|subject1:80, subject2:89, subject3:77
+10001|john,smith|200 carmel road, po 12346, charlotte, 28278, nc|subject3:77
+10002|miller,smith|300 carmel road, po 12347, charlotte, 28277, nc|subject2:89, subject3:77
+10003|johny,smith|110 carmel road, po 12348, charlotte, 28279, nc|subject1:80, subject2:89, subject3:77
+10004|steve,smith|120 carmel road, po 12349, charlotte, 28276, nc|subject2:89
+10005|henry,smith|130 carmel road, po 12350, charlotte, 28276, nc|subject1:80, subject2:89, subject3:77
+
+
+LOAD DATA INPATH '/user/cloudera/cca175/student/data.txt' OVERWRITE INTO TABLE student;
+
+select * from student;
+
+SELECT sid, sname.fname, sname.lname , saddress.line1, saddress.line2, saddress.city, saddress.zip, saddress.state from student;
+
+SELECT sid, sname.fname, sname.lname , smarks["subject1"],marks["subject2"],marks["subject3"] from student;

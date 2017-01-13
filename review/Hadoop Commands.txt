@@ -1,0 +1,11 @@
+hadoop fs -put file1.txt /user/gdevaraj/review/HDFS/file1.txt
+hadoop fs -get /user/gdevaraj/review/HDFS/file1.txt
+
+hadoop fs -copyFromLocal file2.txt /user/gdevaraj/review/HDFS/file1.txt
+
+hadoop fs -cat /user/gdevaraj/review/HDFS/file1.txt
+hadoop fs -cat /user/gdevaraj/review/HDFS/file1.txt /user/gdevaraj/review/HDFS/file2.txt
+
+hadoop fs -appendToFile file2.txt /user/gdevaraj/review/HDFS/file1.txt
+hadoop fs -appendToFile file1.txt file3.txt /user/gdevaraj/review/HDFS/file2.txt
+hadoop fs -appendToFile - /user/gdevaraj/review/HDFS/file1.txt

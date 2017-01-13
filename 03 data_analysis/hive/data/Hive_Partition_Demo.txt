@@ -1,0 +1,95 @@
+use student_db;
+
+DROP TABLE student_basic;
+CREATE TABLE student_basic
+(
+  sid INT,
+  sname STRING,
+  sage INT
+)
+partitioned BY (sexcode STRING)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+stored as textfile;
+
+LOAD DATA INPATH '/user/cloudera/cca175/student/student_basic.txt' OVERWRITE INTO TABLE student_basic;
+
+select * from student_basic;
+
+-- Create an external table 
+
+
+DROP TABLE student_basic_external;
+CREATE EXTERNAL TABLE student_basic_external
+(
+  sid INT,
+  sname STRING,
+  sage INT,
+  ssex STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LOCATION '/user/cloudera/cca175/student';
+
+set hive.exec.dynamic.partition.mode= nonstrict;
+INSERT INTO student_basic partition(sexcode)
+SELECT sid, sname, sage,ssex as sexcode from student_basic_external;
+
+
+--drop the partition female and unknown
+ALTER TABLE student_basic DROP IF EXISTS PARTITION(sexcode='Female');
+ALTER TABLE student_basic DROP IF EXISTS PARTITION(sexcode='Male');
+
+use student_db;
+
+DROP TABLE student_basic;
+CREATE TABLE student_basic
+(
+  sid INT,
+  sname STRING,
+  sage INT
+)
+partitioned BY (sexcode STRING)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+stored as textfile;
+
+LOAD DATA INPATH '/user/cloudera/cca175/student/student_basic.txt' OVERWRITE INTO TABLE student_basic partition(sexcode='UNKNOWN');
+
+LOAD DATA INPATH '/user/cloudera/cca175/student/student_basic.txt' INTO TABLE student_basic partition(sexcode='Male');
+
+LOAD DATA INPATH '/user/cloudera/cca175/student/student_basic.txt' INTO TABLE student_basic partition(sexcode='Female');
+
+set hive.exec.dynamic.partition.mode= nonstrict;
+set hive.txn.manager=org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
+
+ALTER TABLE student_basic drop  partition(sexcode='Female');
+
+
+INSERT INTO student_basic partition(sexcode)
+SELECT sid, sname, sage,ssex as sexcode from student_basic_external;
+
+DELETE FROM student_basic WHERE sexcode = 'Female';
+
+
+DROP TABLE student_basic_external;
+CREATE EXTERNAL TABLE student_basic_external
+(
+  sid INT,
+  sname STRING,
+  sage INT,
+  ssex STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LOCATION '/user/cloudera/cca175/student';
+
+select * from student_basic where sexcode = 'Female';
+
+show partitions student_basic;
+ALTER TABLE student_basic DROP IF EXISTS PARTITION(sexcode='Female');
+ALTER TABLE student_basic DROP IF EXISTS PARTITION(sexcode='Male');
+ALTER TABLE student_basic DROP IF EXISTS PARTITION(sexcode='Unknown');
+
+select * from student_basic_external;
+select * from student_basic;
