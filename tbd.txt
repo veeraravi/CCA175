@@ -1,0 +1,12 @@
+To be practiced:
+
+--hive-overwrite
+
+--boundary-query
+
+sqoop merge
+
+
+sqoop export with input-fields terminated and lines terminated by 
+
+ahraimah6ung#oo8tahquiemoh*Z7Ohf
