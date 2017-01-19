@@ -1,0 +1,94 @@
+CREATE TABLE review_retail_db.customers_avro_partition
+partitioned BY (custid STRING)
+STORED AS AVRO
+TBLPROPERTIES('avro.schema.url' ='/user/cloudera/cca175/review/mysql/schemas/customers.avsc');
+
+ALTER TABLE review_retail_db.customer_avro_new_bkp SET
+TBLPROPERTIES('avro.schema.literal'='
+{
+  "type" : "record",
+  "name" : "customers",
+  "doc" : "Sqoop import of customers",
+  "fields" : [ {
+    "name" : "customer_id",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "customer_id",
+    "sqlType" : "4"
+  }, {
+    "name" : "customer_fname",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "customer_fname",
+    "sqlType" : "12"
+  }, {
+    "name" : "customer_lname",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "customer_lname",
+    "sqlType" : "12"
+  }, {
+    "name" : "customer_email",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "customer_email",
+    "sqlType" : "12"
+  }, {
+    "name" : "customer_password",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "customer_password",
+    "sqlType" : "12"
+  }, {
+    "name" : "customer_street",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "customer_street",
+    "sqlType" : "12"
+  }, {
+    "name" : "customer_city",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "customer_city",
+    "sqlType" : "12"
+  }, {
+    "name" : "customer_state",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "customer_state",
+    "sqlType" : "12"
+  }, {
+    "name" : "customer_zipcode",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "customer_zipcode",
+    "sqlType" : "12"
+  },{
+    "name" : "customer_phone",
+    "type" :  "string" ,
+    "default" : "704-XXX-XXXX",
+    "columnName" : "customer_phone",
+    "sqlType" : "12"
+  } ],
+  "tableName" : "customers"
+}
+')
+
+CREATE external TABLE review_retail_db.customers_avro
+STORED AS AVRO 
+LOCATION '/user/cloudera/cca175/review/mysql/data/customers'
+TBLPROPERTIES('avro.schema.url' ='/user/cloudera/cca175/review/mysql/schemas/customers.avsc');
+
+set hive.exec.dynamic.partition.mode
+--Dynamic Partition 
+INSERT INTO review_retail_db.customers_avro_partition partition(custid)
+SELECT customer_id, customer_fname, customer_lname, customer_email, customer_password, 
+customer_street, customer_city, customer_state, customer_zipcode , CAST(PMOD(customer_id, 2) as STRING) as custid
+from customers_avro;
+
+--Static Partition 
+INSERT INTO review_retail_db.customer_avro_with_part partition(custid='myvalue')
+SELECT customer_id, customer_fname, customer_lname, customer_email, customer_password, 
+customer_street, customer_city, customer_state, customer_zipcode 
+from customers_avro;
+

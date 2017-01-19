@@ -1,0 +1,20 @@
+sqoop_import_Validation arguments More Details
+
+Argument	Description
+--validate	Enable validation of data copied, supports single table copy only.
+--validator <class-name>	Specify validator class to use.
+--validation-threshold <class-name>	Specify validation threshold class to use.
+--validation-failurehandler <class-name>	Specify validation failure handler class to use.
+
+
+
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table proucts \
+--target-dir /user/cloudera/cca175/retail-db/products \
+--validate
+-m 5
+
+Note: An import of a table named "proucts" in the corp database that uses validation to validate the import using the table row count and number of rows copied into HDFS:
