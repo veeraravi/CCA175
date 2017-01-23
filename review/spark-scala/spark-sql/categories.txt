@@ -1,0 +1,9 @@
+scala> val sqlSc = new org.apache.spark.sql.SQLContext(sc)
+scala> import sqlSc.createSchemaRDD
+scala> case class category(cgyid:Int, cgyDeptId:Int, cgyName:String)
+
+scala> val categoriesFile = "/user/cloudera/cca175/retail_db/categories"
+scala> val categoryRdd  = sc.textFile(categoriesFile).map{x=> new category(x.split(",")(0).toInt, x.split(",")(1).toInt, x.split(",")(2))}
+scala> categoryRdd.registerTempTable("categories")
+scala> sqlSc.sql("Select count(*) from categories").collect()
+scala> sqlSc.sql("Select * from categories").collect()

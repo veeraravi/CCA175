@@ -1,0 +1,10 @@
+Set up spark-1.2.0
+
+Download park-1.2.0-bin-hadoop2.4
+
+untar by using command "tar xzf park-1.2.0-bin-hadoop2.4"
+
+https://archive.apache.org/dist/spark/spark-1.2.0/conf
+/home/cloudera/mydownloads/spark-1.2.0-bin-hadoop2.4/lib/spark-assembly-1.2.0-hadoop2.4.0.jar
+/home/cloudera/mydownloads/spark-1.2.0-bin-hadoop2.4/lib/spark-1.2.0-yarn-shuffle.jar
+export SPARK_HOME=/home/cloudera/mydownloads/spark-1.2.0-bin-hadoop2.4 
