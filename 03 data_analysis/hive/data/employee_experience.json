@@ -1,0 +1,7 @@
+{"id":100000,"fname":"Martin","lname":"Smith","profession":"IT","expericence":10, "exp_service" : "years"}
+{"id":100001,"fname":"John","lname":"Smith","profession":"IT","expericence":12, "exp_service" : "years"}
+{"id":100002,"fname":"Will","lname":"Smith","profession":"IT","expericence":13, "exp_service" : "years"}
+{"id":100003,"fname":"Bill","lname":"Smith","profession":"IT","expericence":10, "exp_service" : "months"}
+{"id":100004,"fname":"David","lname":"Miller","profession":"IT","expericence":8, "exp_service" : "months"}
+{"id":100005,"fname":"Jack","lname":"Smith","profession":"IT","expericence":20, "exp_service" : "years"}
+{"id":100006,"fname":"Rock","lname":"Smith","profession":"IT","expericence":21, "exp_service" : "years"}

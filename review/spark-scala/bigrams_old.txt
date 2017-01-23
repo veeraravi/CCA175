@@ -1,0 +1,22 @@
+spark-submit --master local[2] \
+--class read_a_hdfs_file \
+/home/cloudera/spark-scala/handson/target/scala-2.10/spark-scala-hands-on_2.10-1.0.jar
+
+spark-submit --master local[2] \
+--class list_wordCount \
+/home/cloudera/spark-scala/handson/target/scala-2.10/spark-scala-hands-on_2.10-1.0.jar
+
+spark-submit --master local[2] \
+--class groupOfTwo \
+/home/cloudera/spark-scala/handson/target/scala-2.10/spark-scala-hands-on_2.10-1.0.jar
+
+aRdd = Hello my Friend. How are
+
+aRdd.map(_.split(" ")) => Array(Array(Hello, my, Friend, How, are), Array(you, today, my, Friend))
+
+aRdd.map(_.split(" ")).map(x=> x.sliding(2).toArray)
+
+aRdd.map(_.split(" ")).map(x=> x.sliding(2).toArray).flatMap(x=> x) Array(Array(Hello, my), Array(my, Friend), Array(Friend, How), Array(How, are), Array(you, today), Array(today, my), Array(my, Friend))
+
+
+aRdd.map(_.split(" ")).map(x=> x.sliding(2).toArray).flatMap(_.split(","))

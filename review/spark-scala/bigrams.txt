@@ -1,0 +1,6 @@
+val inputFile = "/user/cloudera/cca175/spark/input/bigrams.txt"
+
+val inpRdd = sc.textFile(inputFile)
+
+
+inpRdd.map(_.split(" ").sliding(2).toArray).flatMap(x=>x).map{x=> (x.mkString(" "),1)}.reduceByKey(_+_).foreach(println)

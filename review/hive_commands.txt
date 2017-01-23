@@ -1,0 +1,69 @@
+mysql 
+======
+mysql ---> .psv
+select * from orders into outfile '/tmp/orders.psv' fields terminated by ',' lines terminated by '\n';
+
+
+hive 
+====
+CREATE TABLE review_retail_db.orders_csv
+(order_id INT,
+ order_date STRING,
+ order_customer_id INT,
+ order_status STRING)
+ROW FORMAT DELIMITED
+LINES TERMINATED BY '\n'
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+
+ order_id          | int(11)     | NO   | PRI | NULL    | auto_increment |
+| order_date        | datetime    | NO   |     | NULL    |                |
+| order_customer_id | int(11)     | NO   |     | NULL    |                |
+| order_status      | varchar(45) | NO   |     | NULL    |                |
++-------------------+-------------+------+-----+---------+----------
+
+create table employee
+(eid INT,
+ efname STRING,
+ elname STRING
+ )
+PARTITIONED BY (esex STRING)
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+LOAD DATA INPATH '/home/cloudera/hive/data/male_employee' INTO TABLE employee_db.employee PARTITION(esex="MALE");
+LOAD DATA INPATH '/home/cloudera/hive/data/female_employee' INTO TABLE employee_db.employee PARTITION(esex="FEMALE");
+
+INSERT OVERWRITE LOCAL DIRECTORY '/home/cloudera/review/hive/data/employee' SELECT * FROM employee_db.employee;
+
+alter table employee Rename to employee_data;
+
+alter table employee_data Rename to employee;
+
+alter table employee add columns(edepartment STRING);
+
+from employee
+insert overwrite LOCAL DIRECTORY '/home/cloudera/review/hive/data/malerec' SELECT employee.* where employee.esex="MALE"
+insert overwrite LOCAL DIRECTORY '/home/cloudera/review/hive/data/femalerec' SELECT employee.* WHERE employee.esex="FEMALE";
+
+CREATE DATABASE movies;
+USE movies;
+
+CREATE TABLE u_data_new (
+  userid INT,
+  movieid INT,
+  rating INT,
+  weekday INT)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t';
+
+truncate table employee Partition(esex="FEMALE");
+
+
+
+
+
+
+ 

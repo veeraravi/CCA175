@@ -1,0 +1,133 @@
+val categoriesFile = "/user/cloudera/cca175/retail_db/categories"
+val ordersFile = "/user/cloudera/cca175/retail_db/orders"
+val order_itemsFile = "/user/cloudera/cca175/retail_db/order_items"
+val productsFile = "/user/cloudera/cca175/retail_db/products"
+val departmentsFile = "/user/cloudera/cca175/retail_db/departments"
+val customersFile = "/user/cloudera/cca175/retail_db/customers"
+
+val categoriesRdd = sc.textFile(categoriesFile)
+val ordersRdd = sc.textFile(ordersFile)
+val order_itemsRdd = sc.textFile(order_itemsFile)
+val productsRdd = sc.textFile(productsFile)
+val departmentsRdd = sc.textFile(departmentsFile)
+val customersRdd = sc.textFile(customersFile)
+
+println("Total No.of categories " + categoriesRdd.count())   
+println("Total No.of orders " + ordersRdd.count())   
+println("Total No.of order_items " + order_itemsRdd.count())    
+println("Total No.of products " + productsRdd.count())   
+println("Total No.of departments " + departmentsRdd.count())    
+println("Total No.of customers " + customersRdd.count())   
+======================================================================================================================================================
+//Get all the fitness departments categories
+
+val departmentsKvRdd = departmentsRdd.map{x=> val z= x.split(","); (z(0).toInt, (z(0).toInt, z(1)))}
+val fitnessDepartmentRdd = departmentsKvRdd.filter{case(x,y) => y._2 == "Fitness"}
+
+val categoriesKvRdd = categoriesRdd.map{x=> val z=x.split(","); (z(0).toInt, (z(0).toInt, z(1).toInt,z(2)))}
+val categoriesDeptIdKvRdd = categoriesKvRdd.map{case(x,y) => (y._2, y)}
+
+categoriesDeptIdKvRdd.filter{case(x,y) => (x ==2)}.count()  // returns 8
+categoriesDeptIdKvRdd.filter{_._2._2 == 2}.count()               // returns 8
+
+val fitnessDeptCategoryRdd = fitnessDepartmentRdd.join(categoriesDeptIdKvRdd)
+fitnessDeptCategoryRdd.count() //Returns 8
+
+======================================================================================================================================================
+//Get the counts of No.of Categories per Departments
+val categoriesKvGroupRdd = categoriesDeptIdKvRdd.map{case(x,y)=> (x,1)}.reduceByKey(_+_)
+Array[(Int, Int)] = Array((4,6), (8,10), (5,7), (6,12), (2,8), (3,8), (7,7))
+
+//By Using .join()
+
+departmentsKvRdd.join(categoriesKvGroupRdd).foreach{case(k,(d,c)) => println("Department : " + d._2 + " has " + c  + " categories")}
+println("Department : " + d._2 + " has " + z  + " categories")}
+
+Department : Apparel has 6 categories
+Department : Golf has 7 categories
+Department : Outdoors has 12 categories
+Department : Fitness has 8 categories
+Department : Footwear has 8 categories
+Department : Fan Shop has 7 categories
+
+//By using .leftOuterJoin()
+departmentsKvRdd.leftOuterJoin(categoriesKvGroupRdd).foreach{
+	case(k,(d,somecgy))=> 
+		val z= somecgy.fold(0)(_.get); 
+		println(d._2 + " has " + z + " categories")
+		}
+		
+Apparel has 6 categories
+Golf has 7 categories
+Outdoors has 12 categories
+Fitness has 8 categories
+Footwear has 8 categories
+Fan Shop has 7 categories
+
+
+======================================================================================================================================================
+//Get the distinct category name from categories file
+
+categoriesRdd.map{_.split(",")(2)}.distinct.count()
+categoriesRdd.map{_.split(",")(2)}.distinct.collect()
+categoriesRdd.map{_.split(",")(2)}.distinct.foreach(println)
+======================================================================================================================================================
+//Get the Product counts from categories
+
+categoriesKvRdd
+val productsKvRdd = productsRdd.map{x=> (x.split(",")(0).toInt,x)}
+val productsKvCgyIdRdd = productsKvRdd.map{case(x,y) => val z = y.split(","); (z(1).toInt, z(0).toInt)}
+
+val joinedRdd = categoriesKvRdd.join(productsKvCgyIdRdd)
+
+joinedRdd.aggregateByKey(0)((x,y) => x+1 , (x,y) => (x+y)).sortByKey(true).collect()
+
+//other ways (Not recommended)
+
+joinedRdd.map{case(k,(c,p)) => (k,1)}.aggregateByKey(0)((a,b)=> (a+b), (x,y) => (x+y)).sortByKey(true).foreach(println)
+
+joinedRdd.map{case(k,(c,p)) => (k,1)}.reduceByKey(_+_).sortByKey(true).collect()
+======================================================================================================================================================
+// Get the orders total per customer_id
+val order_itemsTotalRdd = order_itemsRdd.map{x=> val z= x.split(","); 
+ (z(1).toInt, z(4).toFloat)}.reduceByKey(_+_)
+ 
+val ordersPerCustIdRdd = ordersRdd.map{x=> val z=x.split(",");
+ (z(0).toInt, z(2).toInt)}
+ 
+val joinedRdd = order_itemsTotalRdd.join(ordersPerCustIdRdd)
+val totalPerCustIdRdd = joinedRdd.map{case(oid,(total,custid))=> (custid,(total,oid))}
+
+val resultRdd = totalPerCustIdRdd.aggregateByKey((0.0,0))((a,v)=> (a._1 + v._1, a._2+1), (a,v) => (a._1 + v._1, a._2 + v._2))
+
+scala> resultRdd.filter(_._1==9762).collect()
+res60: Array[(Int, (Double, Int))] = Array((9762,(2149.5999908447266,3)))
+
+cross verified in MYsql for the customer_id 9762
+
+mysql> select * from orders where order_customer_id = 9762;
++----------+---------------------+-------------------+--------------+
+| order_id | order_date          | order_customer_id | order_status |
++----------+---------------------+-------------------+--------------+
+|    18624 | 2013-11-17 00:00:00 |              9762 | CLOSED       |
+|    19432 | 2013-11-22 00:00:00 |              9762 | PROCESSING   |
+|    19520 | 2013-11-23 00:00:00 |              9762 | PENDING      |
++----------+---------------------+-------------------+--------------+
+3 rows in set (0.38 sec)
+
+mysql> select sum(order_item_subtotal) from  order_items where  order_item_order_id in ( 18624, 19432, 19520);
++--------------------------+
+| sum(order_item_subtotal) |
++--------------------------+
+|         2149.60001373291 |
++--------------------------+
+1 row in set (0.42 sec)
+
+//Get the No.of orderders Placed by each customer_id
+val resultRdd = totalPerCustIdRdd.aggregateByKey(0)((a,v)=> a+1, (a,v)=> a+v)
+resultRdd.filter(_._1==9762).collect()
+
+res67: Array[(Int, Int)] = Array((9762,3))
+
+
+
