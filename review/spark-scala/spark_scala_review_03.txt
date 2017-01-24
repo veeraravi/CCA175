@@ -1,0 +1,111 @@
+scala> val customersFile = "/user/cloudera/cca175/retail_db/customers"
+
+scala> val customersRdd = sc.textFile(customersFile)
+
+======================================================================================================================================================== 
+//Find Out the stats of Customers per state
+
+scala> val customersKvRdd = customersRdd.map(x=> (x.split(",")(0).toInt, x))
+
+scala> customersKvRdd.map{case(x,y)=> (y.split(",")(7),0)}.aggregateByKey(0)((a,b)=>a+1, (a,b)=> a+b).sortBy{case(x,y)=> -y}.take(5)
+res10: Array[(String, Int)] = Array((PR,4771), (CA,2012), (NY,775), (TX,635), (IL,523))
+
+mysql> select customer_state,count(*) from customers group by customer_state order by 2 desc LIMIT 5;
++----------------+----------+
+| customer_state | count(*) |
++----------------+----------+
+| PR             |     4771 |
+| CA             |     2012 |
+| NY             |      775 |
+| TX             |      635 |
+| IL             |      523 |
++----------------+----------+
+5 rows in set (0.01 sec)
+========================================================================================================================================================
+//Find out the city of each State
+scala> customersRdd.map{x=> (x.split(",")(6), x.split(",")(7))}
+
+scala> customersRdd.map{x=> (x.split(",")(7), x.split(",")(6))}.distinct.aggregateByKey(0)((a,b)=>a+1, (a,b)=> a+b).sortBy{case(x,y)=> -y}.collect()
+scala> customersRdd.map{x=> (x.split(",")(7), x.split(",")(6))}.distinct.aggregateByKey(0)((a,b)=>a+1, (a,b)=> a+b).sortBy(-_._2).collect()
+res24: Array[(String, Int)] = Array((CA,151), (TX,38), (NY,38), (IL,32),
+ (OH,26), (NJ,25), (PR,22), (MI,21), (PA,18), (FL,17), (GA,17), (MD,16), 
+ (MA,15), (NC,14), (VA,11), (WA,10), (CT,9), (AZ,9), (TN,9), (CO,8), (MO,8), 
+ (OR,8), (IN,6), (HI,6), (WI,6), (UT,6), (SC,5), (LA,5), (NM,5), (NV,4), 
+ (KY,4), (KS,3), (OK,2), (AR,2), (MN,2), (DE,2), (ND,2), (RI,2), (WV,2), 
+ (IA,1), (DC,1), (ID,1), (AL,1), (MT,1))
+
+mysql> select customer_state, count(distinct customer_city) from customers group by 1 order by 2 desc;
++----------------+-------------------------------+
+| customer_state | count(distinct customer_city) |
++----------------+-------------------------------+
+| CA             |                           151 |
+| TX             |                            38 |
+| NY             |                            38 |
+| IL             |                            32 |
+| OH             |                            26 |
+| NJ             |                            25 |
+| PR             |                            22 |
+| MI             |                            21 |
+| PA             |                            18 |
+| FL             |                            17 |
+| GA             |                            17 |
+| MD             |                            16 |
+| MA             |                            15 |
+| NC             |                            14 |
+| VA             |                            11 |
+| WA             |                            10 |
+| CT             |                             9 |
+| TN             |                             9 |
+| AZ             |                             9 |
+| OR             |                             8 |
+| MO             |                             8 |
+| CO             |                             8 |
+| HI             |                             6 |
+| WI             |                             6 |
+| UT             |                             6 |
+| IN             |                             6 |
+| NM             |                             5 |
+| LA             |                             5 |
+| SC             |                             5 |
+| NV             |                             4 |
+| KY             |                             4 |
+| KS             |                             3 |
+| AR             |                             2 |
+| RI             |                             2 |
+| ND             |                             2 |
+| DE             |                             2 |
+| OK             |                             2 |
+| MN             |                             2 |
+| WV             |                             2 |
+| DC             |                             1 |
+| MT             |                             1 |
+| AL             |                             1 |
+| ID             |                             1 |
+| IA             |                             1 |
++----------------+-------------------------------+
+44 rows in set (0.03 sec)
+
+
+customersRdd.map{x=> (x.split(",")(7), x.split(",")(6))}.distinct.aggregateByKey(0)((a,b)=>a+1, (a,b)=> a+b).filter(_._1=="TX").collect()
+res22: Array[(String, Int)] = Array((TX,38))
+
+mysql> select customer_state, count(distinct customer_city) from customers where customer_state="TX";
++----------------+-------------------------------+
+| customer_state | count(distinct customer_city) |
++----------------+-------------------------------+
+| TX             |                            38 |
++----------------+-------------------------------+
+1 row in set (0.01 sec)
+
+scala> customersRdd.map{x=> (x.split(",")(7), x.split(",")(6))}.distinct.countByKey().foreach(println)
+
+//Note: the return type is Map(key -> value)
+
+
+
+
+
+
+
+
+

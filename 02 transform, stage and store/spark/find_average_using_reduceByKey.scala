@@ -9,3 +9,7 @@ prodSalesRdd.leftOuterJoin(prodCountRdd).foreach{
 case(k,(s,someC))=> val count = someC.fold(1)(_.toInt); 
 val avg = s.toInt/count.toInt; 
 println(k + ":"+ avg)}
+
+from pyspark import SparkConf,SparkContext,SQLContext
+
+orders

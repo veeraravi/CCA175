@@ -1,7 +1,3 @@
-val numbersFile = "/user/email2dgk/review/spark/data/numbers.txt"
-val nosKvRdd = sc.textFile(numbersFile).map{x=> val z=x.split(","); (z(0),z(1)}
-nosKvRdd.groupByKey().mapValues(_.mkstring(",")).map{(x,y)=> x+","+y}.saveAsTextFile("/user/email2dgk/review/spark/data/output2")
-
 
 val prodFile = "/user/email2dgk/review/spark/data/prod_sales_rows.txt"
 val prodKvRdd = sc.textFile(prodFile).map{x=> val z= x.split(","); (z(0), z(1).toInt)}

@@ -130,4 +130,57 @@ resultRdd.filter(_._1==9762).collect()
 res67: Array[(Int, Int)] = Array((9762,3))
 
 
+val ordersFile = "/user/cloudera/cca175/retail_db/orders"
+val ordersRdd = sc.textFile()
+
+//Top 5 (Ascending)
+
+ordersRdd.takeOrdered(5)(Ordering[Int].on(x=> (x.split(",")(0).toInt)))
+
+res31: Array[String] = Array(
+1,2013-07-25 00:00:00,11599,CLOSED, 
+2,2013-07-25 00:00:00,256,PENDING_PAYMENT, 
+3,2013-07-25 00:00:00,12111,COMPLETE, 
+4,2013-07-25 00:00:00,8827,CLOSED, 
+5,2013-07-25 00:00:00,11318,COMPLETE)
+
+scala> ordersRdd.takeOrdered(5)(Ordering[Int].reverse.on(x=> x.split(",")(0).toInt))
+res32: Array[String] = Array(
+68883,2014-07-23 00:00:00,5533,COMPLETE, 
+68882,2014-07-22 00:00:00,10000,ON_HOLD, 
+68881,2014-07-19 00:00:00,2518,PENDING_PAYMENT, 
+68880,2014-07-13 00:00:00,1117,COMPLETE, 
+68879,2014-07-09 00:00:00,778,COMPLETE)
+
+val productsFile = "/user/cloudera/cca175/retail_db/products"
+val productsRdd = sc.textFile(productsFile)
+
+val productsKvRdd = productsRdd.map{x=> (x.split(",")(1).toInt, x)}.filter{case(x,y)=> (y.split(",")(4) != "")}
+
+val productsGroupRdd = productsKvRdd.groupByKey()
+
+val products52GroupRdd = productsGroupRdd.filter(_._1 == 52)
+
+products52GroupRdd.flatMap{rec => (rec._2.toList.sortBy(k=> -k.split(",")(4).toFloat)).take(2)}
+products52GroupRdd.flatMap{rec => (rec._2.toList.sortBy(k=> -k.split(",")(4).toFloat)).take(2)}
+
+
+productsGroupRdd.flatMap{rec=> (rec._2.toList.sortBy(k=> -k.split(",")(4).tofloat)).take(3)}.saveAsTextFile("/user/cloudera/cca175/review/spark/data/output/top_3_price_products")
+
+
+val ordersFile = "/user/cloudera/cca175/retail_db/orders"
+val ordersRdd = sc.textFile(ordersFile)
+
+
+val order_itemsFile = "/user/cloudera/cca175/retail_db/order_items"
+val order_itemsRdd = sc.textFile(orders_itemsFile)
+
+==================================
+
+productsFile = "/user/cloudera/cca175/retail_db/products"
+productsRdd = sc.textFile(productsFile)
+proudctsKvRdd= productsRdd.map(lambda x: (int(x.split(",")[1]),x))
+productsKvRdd = proudctsKvRdd.filter(lambda (x,y): y.split(",")[4] != "")
+
+
 
