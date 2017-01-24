@@ -1,0 +1,31 @@
+val ordersFile = "/user/cloudera/cca175/review/mysql/retail_db_all_tables/orders"
+val ordersRdd = sc.textFile(ordersFile)
+
+ordersRdd.take(5)
+
+val ordersKvStatusRdd = ordersRdd.map{x=> val z = x.split(","); 
+(z(0).toInt, z(3)}
+
+scala> ordersKvStatusRdd.map{case(x,y)=> (y,x)}.aggregateByKey(0)((a,v)=> a+1, (a,v) => a+v).collect()
+res6: Array[(String, Int)] = Array((PENDING_PAYMENT,15030), (PAYMENT_REVIEW,729), (PENDING,7610), (ON_HOLD,3798), (PROCESSING,8275), (SUSPECTED_FRAUD,1558), (COMPLETE,22899), (CANCELED,1428), (CLOSED,7556))
+
+
+ordersKvStatusCustIdRdd = ordersRdd.map{x=> val z = x.split(","); ((z(2) + z(3), z(0)))}
+
+scala> val ordersKvStatusCustIdRdd = ordersRdd.map{x=> val z = x.split(","); ((z(2) + z(3), z(0)))}
+
+scala> ordersKvStatusCustIdRdd.aggregateByKey(0)((a,v)=> a+1, (a,v)=> a+v).collect()
+
+scala> ordersKvStatusCustIdRdd.aggregateByKey(0)((a,v)=> a+1, (a,v)=> a+v).filter(_._1.contains("7664")).collect()
+
+res8: Array[(String, Int)] = Array((7664PENDING,2), (7664PROCESSING,1), (7664ON_HOLD,1), (7664COMPLETE,2), (7664PENDING_PAYMENT,2), (7664CLOSED,2))
+
+
+scala> ordersKvStatusCustIdRdd.map{case(x,y)=> (x,1)}.reduceByKey(_+_).filter(_._1.contains("7664")).collect()
+res9: Array[(String, Int)] = Array((7664PENDING,2), (7664PROCESSING,1), (7664ON_HOLD,1), (7664COMPLETE,2), (7664PENDING_PAYMENT,2), (7664CLOSED,2))
+
+
+val ordersKvDateStatusRdd = ordersRdd.map{x=> val z = x.split(","); (z(1) + ","+z(3), z)}
+
+scala> ordersKvDateStatusRdd.aggregateByKey(0)((a,v)=> a+1 ,(a,v)=> a+v).filter(_._1.contains("2013-07-25")).collect()
+res13: Array[(String, Int)] = Array((2013-07-25 00:00:00.0,PROCESSING,16), (2013-07-25 00:00:00.0,PAYMENT_REVIEW,3), (2013-07-25 00:00:00.0,PENDING,13), (2013-07-25 00:00:00.0,COMPLETE,42), (2013-07-25 00:00:00.0,ON_HOLD,5), (2013-07-25 00:00:00.0,CANCELED,1), (2013-07-25 00:00:00.0,SUSPECTED_FRAUD,2), (2013-07-25 00:00:00.0,CLOSED,20), (2013-07-25 00:00:00.0,PENDING_PAYMENT,41))
