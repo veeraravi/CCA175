@@ -1,0 +1,3 @@
+mysql
+====
+select * from departments into outfile <Local File Path> fields terminated by ',' lines terminated by '\n';
