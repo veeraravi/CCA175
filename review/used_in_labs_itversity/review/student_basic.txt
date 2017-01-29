@@ -1,0 +1,17 @@
+1000,Adam,25,Male
+1001,Bill,25,Male
+1002,Charlie,24,Male
+1003,David,23,Female
+1004,Davinci,24,Female
+1005,Robert,25,Male
+1006,Lilly,24,Female
+1007,Mary,24,Female
+1008,Nancy,24,Female
+1009,Mark,24,Male
+1010,Kathrene,24,Female
+1011,King,24,Unknown
+1012,John,24,Unknown
+1013,Jimmy,24,Unknown
+1014,Papa,24,Male
+1015,Dunkin,24,Male
+1016,Oz,24,Unknown

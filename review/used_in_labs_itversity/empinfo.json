@@ -1,0 +1,23 @@
+{ "employee" :[
+    {"ename": "Robert",
+     "eage" : 34,
+     "ecity" : "chalrotte",
+     "ezip": 23455
+    },
+    {"ename": "Martin",
+     "eage" : 34,
+     "ecity" : "chalrotte",
+     "ezip": 23452
+    },
+    {"ename": "Robin",
+     "eage" : 34,
+     "ecity" : "chalrotte",
+     "ezip": 2342
+    },
+    {"ename": "Rockford",
+     "eage" : 34,
+     "ecity" : "chalrotte",
+     "ezip": 22232
+    }
+]
+}
