@@ -1,0 +1,11 @@
+iphone6s,10000
+iphone5s,20000
+iphone5s,30000
+7iphone,5000
+iphone7,5000
+7iphone,5000
+6siphone,10000
+iphone6s,10000
+5siphone,10000
+iphone5,100
+5iphone,100

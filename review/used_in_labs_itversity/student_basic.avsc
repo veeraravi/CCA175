@@ -1,0 +1,2 @@
+avro.schema	"bytes"
+avro.codec	deflate
